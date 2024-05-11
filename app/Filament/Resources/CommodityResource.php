@@ -19,7 +19,9 @@ class CommodityResource extends Resource
 {
     protected static ?string $model = Commodity::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-s-archive-box';
+
+    protected static ?string $navigationGroup = 'Inventory';
 
     public static function form(Form $form): Form
     {
@@ -102,9 +104,18 @@ class CommodityResource extends Resource
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('condition')
-                    ->label('Condition')
-                    ->searchable()
-                    ->sortable(),
+                    ->badge()
+                    ->color(fn($record) => match ($record->condition) {
+                        'new' => 'success',
+                        'used' => 'warning',
+                        'damaged' => 'danger',
+                    })
+                    ->icon(fn($record) => match ($record->condition) {
+                        'new' => 'heroicon-o-check-circle',
+                        'used' => 'heroicon-m-at-symbol',
+                        'damaged' => 'heroicon-m-sparkles',
+                    })
+                    ->label('Condition'),
                 Tables\Columns\TextColumn::make('register_date')
                     ->label('Register Date')
                     ->searchable()
