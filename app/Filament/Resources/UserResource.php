@@ -28,17 +28,20 @@ class UserResource extends Resource
                     ->required(),
                 TextInput::make('username')
                     ->label('Username')
-                    ->required(),
+                    ->required()
+                    ->unique(),
                 TextInput::make('password')
                     ->label('Password')
                     ->password()
                     ->autocomplete('new-password')
-                    ->required(),
+                    ->required()
+                    ->confirmed(),
                 TextInput::make('password_confirmation')
                     ->label('Confirm Password')
                     ->password()
                     ->autocomplete('new-password')
-                    ->required(),
+                    ->required()
+                    ->dehydrated(false)
             ]);
     }
 

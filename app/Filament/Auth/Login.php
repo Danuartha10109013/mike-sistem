@@ -5,6 +5,7 @@ namespace App\Filament\Auth;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Pages\Auth\Login as BaseAuth;
+use Illuminate\Validation\ValidationException;
 
 class Login extends BaseAuth
 {
@@ -27,6 +28,13 @@ class Login extends BaseAuth
             ->extraInputAttributes(['tabindex' => 1]);
     }
 
+    protected function throwFailureValidationException(): never
+    {
+        throw ValidationException::withMessages([
+            'data.username' => __('filament-panels::pages/auth/login.messages.failed'),
+        ]);
+    }
+
     protected function getCredentialsFromFormData(array $data): array
     {
         return [
@@ -34,5 +42,5 @@ class Login extends BaseAuth
             'password' => $data['password'],
         ];
     }
-    
+
 }
