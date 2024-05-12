@@ -19,8 +19,7 @@ return new class extends Migration {
             $table->string('number')->unique();
             $table->string('name');
             $table->integer('quantity');
-            $table->date('register_date');
-            $table->date('update_date');
+            $table->date('date');
             $table->string('condition');
             $table->timestamps();
         });

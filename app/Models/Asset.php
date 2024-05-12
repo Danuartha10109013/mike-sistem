@@ -3,30 +3,41 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Asset extends Model
 {
+    public static function number()
+    {
+        $last = self::latest()->first();
+        if (!$last) {
+            return 'ASSET-' . date('Ymd') . '-' . '001';
+        }
+        $lastNumber = $last->number;
+        $lastNumber = explode('-', $lastNumber);
+        $lastNumber = end($lastNumber);
+        $lastNumber = (int)$lastNumber;
+        $lastNumber++;
+        $lastNumber = str_pad($lastNumber, 3, '0', STR_PAD_LEFT);
+        return 'ASSET-' . date('Ymd') . '-' . $lastNumber;
+    }
 
-    protected $casts = [
-//        'condition' => CommodityCondition::class
-    ];
-
-    public function category()
+    public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
     }
 
-    public function room()
+    public function room(): BelongsTo
     {
         return $this->belongsTo(Room::class);
     }
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function brand()
+    public function brand(): BelongsTo
     {
         return $this->belongsTo(Brand::class);
     }

@@ -32,34 +32,40 @@ class AssetResource extends Resource
                 Forms\Components\TextInput::make('number')
                     ->label('Number')
                     ->required()
+                    ->readOnly()
                     ->unique()
-                    ->maxLength(10)
-                    ->placeholder('Enter the number of the commodity'),
+                    ->maxLength(18)
+                    ->minLength(18)
+                    ->default(fn() => Asset::number())
+                    ->placeholder('Enter the number of the asset'),
                 Forms\Components\TextInput::make('name')
                     ->label('Name')
                     ->required()
                     ->maxLength(255)
-                    ->placeholder('Enter the name of the commodity'),
+                    ->placeholder('Enter the name of the asset'),
                 Forms\Components\TextInput::make('quantity')
                     ->label('Quantity')
                     ->required()
                     ->type('number')
-                    ->placeholder('Enter the quantity of the commodity'),
+                    ->placeholder('Enter the quantity of the asset'),
                 Forms\Components\Select::make('brand_id')
                     ->label('Brand')
                     ->required()
+                    ->searchable()
                     ->options(Brand::pluck('name', 'id')->toArray())
-                    ->placeholder('Select the category of the commodity'),
+                    ->placeholder('Select the category of the asset'),
                 Forms\Components\Select::make('category_id')
                     ->label('Category')
                     ->required()
+                    ->searchable()
                     ->options(Category::pluck('name', 'id')->toArray())
-                    ->placeholder('Select the category of the commodity'),
+                    ->placeholder('Select the category of the asset'),
                 Forms\Components\Select::make('room_id')
                     ->label('Room')
                     ->required()
+                    ->searchable()
                     ->options(Room::pluck('name', 'id')->toArray())
-                    ->placeholder('Select the room of the commodity'),
+                    ->placeholder('Select the room of the asset'),
                 Forms\Components\Select::make('condition')
                     ->label('Condition')
                     ->required()
@@ -68,20 +74,19 @@ class AssetResource extends Resource
                         'used' => 'Used',
                         'damaged' => 'Damaged',
                     ])
-                    ->placeholder('Select the condition of the commodity'),
-                Forms\Components\DatePicker::make('register_date')
-                    ->label('Register Date')
+                    ->placeholder('Select the condition of the asset'),
+                Forms\Components\DatePicker::make('date')
+                    ->label('Date')
+                    ->default(now())
                     ->required()
-                    ->placeholder('Select the register date of the commodity'),
-                Forms\Components\DatePicker::make('update_date')
-                    ->label('Update Date')
-                    ->required()
-                    ->placeholder('Select the update date of the commodity'),
+                    ->placeholder('Select the date of the asset'),
                 Forms\Components\Select::make('user_id')
                     ->label('User')
                     ->required()
+                    ->searchable()
+                    ->default(fn() => auth()->id())
                     ->options(User::pluck('name', 'id')->toArray())
-                    ->placeholder('Select the user of the commodity'),
+                    ->placeholder('Select the user of the asset'),
             ]);
     }
 
@@ -129,12 +134,8 @@ class AssetResource extends Resource
                         'damaged' => 'heroicon-m-sparkles',
                     })
                     ->label('Condition'),
-                Tables\Columns\TextColumn::make('register_date')
-                    ->label('Register Date')
-                    ->searchable()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('update_date')
-                    ->label('Update Date')
+                Tables\Columns\TextColumn::make('date')
+                    ->label('Date')
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('user.name')
