@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Filament\Resources\CommodityResource\Pages;
+namespace App\Filament\Resources\BrandResource\Pages;
 
-use App\Filament\Resources\AssetResource;
+use App\Filament\Resources\BrandResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
-class ListAssets extends ListRecords
+class ListBrands extends ListRecords
 {
-    protected static string $resource = AssetResource::class;
+    protected static string $resource = BrandResource::class;
 
     protected function getHeaderActions(): array
     {
@@ -16,5 +16,4 @@ class ListAssets extends ListRecords
             Actions\CreateAction::make(),
         ];
     }
-    
 }

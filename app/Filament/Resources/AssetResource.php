@@ -5,9 +5,11 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\CommodityResource\Pages;
 use App\Filament\Resources\CommodityResource\RelationManagers;
 use App\Models\Asset;
+use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Room;
 use App\Models\User;
+use Exception;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -36,7 +38,6 @@ class AssetResource extends Resource
                 Forms\Components\TextInput::make('name')
                     ->label('Name')
                     ->required()
-                    ->unique()
                     ->maxLength(255)
                     ->placeholder('Enter the name of the commodity'),
                 Forms\Components\TextInput::make('quantity')
@@ -44,6 +45,11 @@ class AssetResource extends Resource
                     ->required()
                     ->type('number')
                     ->placeholder('Enter the quantity of the commodity'),
+                Forms\Components\Select::make('brand_id')
+                    ->label('Brand')
+                    ->required()
+                    ->options(Brand::pluck('name', 'id')->toArray())
+                    ->placeholder('Select the category of the commodity'),
                 Forms\Components\Select::make('category_id')
                     ->label('Category')
                     ->required()
@@ -79,6 +85,9 @@ class AssetResource extends Resource
             ]);
     }
 
+    /**
+     * @throws Exception
+     */
     public static function table(Table $table): Table
     {
         return $table
@@ -93,6 +102,10 @@ class AssetResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('quantity')
                     ->label('Quantity')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('brand.name')
+                    ->label('Brand')
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('category.name')
@@ -142,11 +155,11 @@ class AssetResource extends Resource
                     ->label('Room')
                     ->attribute('room_id')
                     ->searchable(),
-                SelectFilter::make('user_id')
+                SelectFilter::make('brand_id')
                     ->multiple()
-                    ->options(User::pluck('name', 'id')->toArray())
-                    ->label('User')
-                    ->attribute('user_id')
+                    ->options(Brand::pluck('name', 'id')->toArray())
+                    ->label('Brand')
+                    ->attribute('brand_id')
                     ->searchable(),
                 SelectFilter::make('status')
                     ->multiple()

@@ -25,6 +25,7 @@ class DashboardStats extends StatsOverviewWidget
             StatsOverviewWidget\Stat::make('Total Commodities in Stock', Asset::where('quantity', '>', 0)->count())
                 ->icon('heroicon-s-archive-box')
                 ->color('yellow'),
+            
         ];
     }
 }

@@ -25,4 +25,24 @@ class Asset extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function brand()
+    {
+        return $this->belongsTo(Brand::class);
+    }
+
+    public function scopeNew($query)
+    {
+        return $query->where('condition', 'new');
+    }
+
+    public function scopeUsed($query)
+    {
+        return $query->where('condition', 'used');
+    }
+
+    public function scopeDamaged($query)
+    {
+        return $query->where('condition', 'damaged');
+    }
 }

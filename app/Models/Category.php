@@ -10,8 +10,8 @@ class Category extends Model
 {
     use HasFactory;
 
-    public function articles(): HasMany
+    public function assets(): HasMany
     {
-        return $this->hasMany(Article::class);
+        return $this->hasMany(Asset::class);
     }
 }

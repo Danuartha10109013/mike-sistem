@@ -2,23 +2,22 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\RoomResource\Pages;
-use App\Filament\Resources\RoomResource\RelationManagers;
-use App\Models\Room;
+use App\Filament\Resources\BrandResource\Pages;
+use App\Filament\Resources\BrandResource\RelationManagers;
+use App\Models\Brand;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 
-class RoomResource extends Resource
+class BrandResource extends Resource
 {
-    protected static ?string $model = Room::class;
+    protected static ?string $model = Brand::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?string $navigationGroup = 'Data';
-
 
     public static function form(Form $form): Form
     {
@@ -26,12 +25,12 @@ class RoomResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->label('Name')
-                    ->placeholder('Enter the category name')
+                    ->placeholder('Enter the brand name')
                     ->required()
                     ->maxLength(255),
                 Forms\Components\Textarea::make('description')
                     ->label('Description')
-                    ->placeholder('Enter the category description')
+                    ->placeholder('Enter the brand description')
                     ->rows(3),
             ]);
     }
@@ -76,9 +75,9 @@ class RoomResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListRooms::route('/'),
-            'create' => Pages\CreateRoom::route('/create'),
-            'edit' => Pages\EditRoom::route('/{record}/edit'),
+            'index' => Pages\ListBrands::route('/'),
+            'create' => Pages\CreateBrand::route('/create'),
+            'edit' => Pages\EditBrand::route('/{record}/edit'),
         ];
     }
 }
