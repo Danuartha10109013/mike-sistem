@@ -2,13 +2,13 @@
 
 namespace App\Filament\Resources\CommodityResource\Pages;
 
-use App\Filament\Resources\CommodityResource;
+use App\Filament\Resources\AssetResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 
-class EditCommodity extends EditRecord
+class EditAsset extends EditRecord
 {
-    protected static string $resource = CommodityResource::class;
+    protected static string $resource = AssetResource::class;
 
     protected function getHeaderActions(): array
     {

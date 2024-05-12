@@ -17,6 +17,6 @@ class Room extends Model
      */
     public function commodities(): HasMany
     {
-        return $this->hasMany(Commodity::class);
+        return $this->hasMany(Asset::class);
     }
 }

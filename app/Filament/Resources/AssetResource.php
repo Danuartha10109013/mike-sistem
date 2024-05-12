@@ -4,8 +4,8 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\CommodityResource\Pages;
 use App\Filament\Resources\CommodityResource\RelationManagers;
+use App\Models\Asset;
 use App\Models\Category;
-use App\Models\Commodity;
 use App\Models\Room;
 use App\Models\User;
 use Filament\Forms;
@@ -15,9 +15,9 @@ use Filament\Tables;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
-class CommodityResource extends Resource
+class AssetResource extends Resource
 {
-    protected static ?string $model = Commodity::class;
+    protected static ?string $model = Asset::class;
 
     protected static ?string $navigationIcon = 'heroicon-s-archive-box';
 
@@ -181,9 +181,9 @@ class CommodityResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListCommodities::route('/'),
-            'create' => Pages\CreateCommodity::route('/create'),
-            'edit' => Pages\EditCommodity::route('/{record}/edit'),
+            'index' => Pages\ListAssets::route('/'),
+            'create' => Pages\CreateAsset::route('/create'),
+            'edit' => Pages\EditAsset::route('/{record}/edit'),
         ];
     }
 }
