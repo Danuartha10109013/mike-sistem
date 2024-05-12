@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\MaintenanceResource\Pages;
 
 use App\Filament\Resources\MaintenanceResource;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateMaintenance extends CreateRecord
@@ -15,5 +16,18 @@ class CreateMaintenance extends CreateRecord
         $data['user_id'] = auth()->id();
 
         return $data;
+    }
+
+    protected function getRedirectUrl(): string
+    {
+        return self::getResource()::getUrl('index');
+    }
+
+    protected function getCreatedNotification(): ?Notification
+    {
+        return Notification::make()
+            ->success()
+            ->title('Maintenance created')
+            ->body('The maintenance has been created successfully.');
     }
 }

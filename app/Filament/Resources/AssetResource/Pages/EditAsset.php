@@ -10,6 +10,7 @@ use App\Models\User;
 use Filament\Actions;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 
 class EditAsset extends EditRecord
@@ -79,5 +80,18 @@ class EditAsset extends EditRecord
         return [
             Actions\DeleteAction::make(),
         ];
+    }
+
+    protected function getRedirectUrl(): string
+    {
+        return self::getResource()::getUrl('index');
+    }
+
+    protected function getSavedNotification(): ?Notification
+    {
+        return Notification::make()
+            ->success()
+            ->title('Asset Updated')
+            ->body('The asset was updated successfully.');
     }
 }
