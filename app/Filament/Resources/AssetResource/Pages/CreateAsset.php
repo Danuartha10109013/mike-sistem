@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\CommodityResource\Pages;
+namespace App\Filament\Resources\AssetResource\Pages;
 
 use App\Filament\Resources\AssetResource;
 use Filament\Notifications\Notification;

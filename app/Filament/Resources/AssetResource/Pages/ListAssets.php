@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\CommodityResource\Pages;
+namespace App\Filament\Resources\AssetResource\Pages;
 
 use App\Filament\Resources\AssetResource;
 use Filament\Actions;
@@ -16,5 +16,5 @@ class ListAssets extends ListRecords
             Actions\CreateAction::make(),
         ];
     }
-    
+
 }

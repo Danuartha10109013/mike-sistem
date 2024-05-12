@@ -2,8 +2,8 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\CommodityResource\Pages;
-use App\Filament\Resources\CommodityResource\RelationManagers;
+use App\Filament\Resources\AssetResource\Pages;
+use App\Filament\Resources\AssetResource\RelationManagers;
 use App\Models\Asset;
 use App\Models\Brand;
 use App\Models\Category;
@@ -12,6 +12,10 @@ use App\Models\User;
 use Exception;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Infolists\Components;
+use Filament\Infolists\Infolist;
+use Filament\Pages\SubNavigationPosition;
+use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Filters\SelectFilter;
@@ -24,71 +28,7 @@ class AssetResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-s-archive-box';
 
     protected static ?string $navigationGroup = 'Inventory';
-
-    public static function form(Form $form): Form
-    {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('number')
-                    ->label('Number')
-                    ->required()
-                    ->readOnly()
-                    ->unique()
-                    ->maxLength(18)
-                    ->minLength(18)
-                    ->default(fn() => Asset::number())
-                    ->placeholder('Enter the number of the asset'),
-                Forms\Components\TextInput::make('name')
-                    ->label('Name')
-                    ->required()
-                    ->maxLength(255)
-                    ->placeholder('Enter the name of the asset'),
-                Forms\Components\TextInput::make('quantity')
-                    ->label('Quantity')
-                    ->required()
-                    ->type('number')
-                    ->placeholder('Enter the quantity of the asset'),
-                Forms\Components\Select::make('brand_id')
-                    ->label('Brand')
-                    ->required()
-                    ->searchable()
-                    ->options(Brand::pluck('name', 'id')->toArray())
-                    ->placeholder('Select the category of the asset'),
-                Forms\Components\Select::make('category_id')
-                    ->label('Category')
-                    ->required()
-                    ->searchable()
-                    ->options(Category::pluck('name', 'id')->toArray())
-                    ->placeholder('Select the category of the asset'),
-                Forms\Components\Select::make('room_id')
-                    ->label('Room')
-                    ->required()
-                    ->searchable()
-                    ->options(Room::pluck('name', 'id')->toArray())
-                    ->placeholder('Select the room of the asset'),
-                Forms\Components\Select::make('condition')
-                    ->label('Condition')
-                    ->required()
-                    ->options([
-                        'new' => 'New',
-                        'used' => 'Used',
-                        'damaged' => 'Damaged',
-                    ])
-                    ->placeholder('Select the condition of the asset'),
-                Forms\Components\DatePicker::make('date')
-                    ->label('Date')
-                    ->default(now())
-                    ->required()
-                    ->placeholder('Select the date of the asset'),
-                Forms\Components\Select::make('user_id')
-                    ->label('User')
-                    ->required()
-                    ->searchable()
-                    ->default(fn() => auth()->id())
-                    ->options(User::pluck('name', 'id')->toArray())
-                    ->placeholder('Select the user of the asset'),
-            ]);
-    }
+    protected static SubNavigationPosition $subNavigationPosition = SubNavigationPosition::Top;
 
     /**
      * @throws Exception
@@ -174,6 +114,7 @@ class AssetResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
+                Tables\Actions\ViewAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -183,6 +124,55 @@ class AssetResource extends Resource
             ->emptyStateActions([
                 Tables\Actions\CreateAction::make()->icon('heroicon-o-plus')
             ]);
+    }
+
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist->schema([
+            Components\Section::make()
+                ->schema([
+                    Components\Split::make([
+                        Components\Grid::make(2)
+                            ->schema([
+                                Components\Group::make([
+                                    Components\TextEntry::make('number')
+                                        ->label('Number'),
+                                    Components\TextEntry::make('name')
+                                        ->label('Name'),
+                                    Components\TextEntry::make('quantity')
+                                        ->label('Quantity'),
+                                    Components\TextEntry::make('brand.name')
+                                        ->label('Brand'),
+                                    Components\TextEntry::make('category.name')
+                                        ->label('Category'),
+                                ]),
+                                Components\Group::make([
+                                    Components\TextEntry::make('room.name')
+                                        ->label('Room'),
+                                    Components\TextEntry::make('condition')
+                                        ->label('Condition'),
+                                    Components\TextEntry::make('date')
+                                        ->label('Date'),
+                                    Components\TextEntry::make('user.name')
+                                        ->label('User'),
+                                    Components\TextEntry::make('created_at')
+                                        ->label('Created At'),
+                                ])
+                            ])
+                    ]),
+                ])
+                ->collapsible()
+                ->description('View the details of the asset.')
+        ]);
+    }
+
+    public static function getRecordSubNavigation(Page $page): array
+    {
+        return $page->generateNavigationItems([
+            Pages\ViewAsset::class,
+            Pages\EditAsset::class,
+            Pages\ViewAssetMaintenances::class,
+        ]);
     }
 
     public static function getRelations(): array
@@ -198,6 +188,73 @@ class AssetResource extends Resource
             'index' => Pages\ListAssets::route('/'),
             'create' => Pages\CreateAsset::route('/create'),
             'edit' => Pages\EditAsset::route('/{record}/edit'),
+            'view' => Pages\ViewAsset::route('/{record}'),
+            'maintenances' => Pages\ViewAssetMaintenances::route('/{record}/maintenances'),
         ];
+    }
+
+    public static function form(Form $form): Form
+    {
+        return $form
+            ->schema([
+                Forms\Components\TextInput::make('number')
+                    ->label('Number')
+                    ->required()
+                    ->readOnly()
+                    ->unique()
+                    ->maxLength(18)
+                    ->minLength(18)
+                    ->default(fn() => Asset::number())
+                    ->placeholder('Enter the number of the asset'),
+                Forms\Components\TextInput::make('name')
+                    ->label('Name')
+                    ->required()
+                    ->maxLength(255)
+                    ->placeholder('Enter the name of the asset'),
+                Forms\Components\TextInput::make('quantity')
+                    ->label('Quantity')
+                    ->required()
+                    ->type('number')
+                    ->placeholder('Enter the quantity of the asset'),
+                Forms\Components\Select::make('brand_id')
+                    ->label('Brand')
+                    ->required()
+                    ->searchable()
+                    ->options(Brand::pluck('name', 'id')->toArray())
+                    ->placeholder('Select the category of the asset'),
+                Forms\Components\Select::make('category_id')
+                    ->label('Category')
+                    ->required()
+                    ->searchable()
+                    ->options(Category::pluck('name', 'id')->toArray())
+                    ->placeholder('Select the category of the asset'),
+                Forms\Components\Select::make('room_id')
+                    ->label('Room')
+                    ->required()
+                    ->searchable()
+                    ->options(Room::pluck('name', 'id')->toArray())
+                    ->placeholder('Select the room of the asset'),
+                Forms\Components\Select::make('condition')
+                    ->label('Condition')
+                    ->required()
+                    ->options([
+                        'new' => 'New',
+                        'used' => 'Used',
+                        'damaged' => 'Damaged',
+                    ])
+                    ->placeholder('Select the condition of the asset'),
+                Forms\Components\DatePicker::make('date')
+                    ->label('Date')
+                    ->default(now())
+                    ->required()
+                    ->placeholder('Select the date of the asset'),
+                Forms\Components\Select::make('user_id')
+                    ->label('User')
+                    ->required()
+                    ->searchable()
+                    ->default(fn() => auth()->id())
+                    ->options(User::pluck('name', 'id')->toArray())
+                    ->placeholder('Select the user of the asset'),
+            ]);
     }
 }
