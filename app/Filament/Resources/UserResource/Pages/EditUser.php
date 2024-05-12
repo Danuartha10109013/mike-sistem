@@ -27,12 +27,14 @@ class EditUser extends EditRecord
                 ->label('Password')
                 ->password()
                 ->autocomplete('new-password')
+                ->confirmed()
                 ->nullable(),
             TextInput::make('password_confirmation')
                 ->label('Confirm Password')
                 ->password()
                 ->autocomplete('new-password')
-                ->nullable(),
+                ->nullable()
+                ->dehydrated(false)
         ]);
     }
 
@@ -54,5 +56,14 @@ class EditUser extends EditRecord
             ->success()
             ->title('User Updated')
             ->body('The user was updated successfully.');
+    }
+
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        if ($data['password'] === null) {
+            unset($data['password']);
+        }
+
+        return $data;
     }
 }
