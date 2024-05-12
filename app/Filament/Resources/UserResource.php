@@ -26,8 +26,8 @@ class UserResource extends Resource
                 TextInput::make('name')
                     ->label('Name')
                     ->required(),
-                TextInput::make('email')
-                    ->label('Email')
+                TextInput::make('username')
+                    ->label('Username')
                     ->required(),
                 TextInput::make('password')
                     ->label('Password')
@@ -49,7 +49,7 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('email')
+                Tables\Columns\TextColumn::make('username')
                     ->searchable()
                     ->sortable(),
             ])
