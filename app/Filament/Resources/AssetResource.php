@@ -63,16 +63,6 @@ class AssetResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('condition')
                     ->badge()
-                    ->color(fn($record) => match ($record->condition) {
-                        'new' => 'success',
-                        'used' => 'warning',
-                        'damaged' => 'danger',
-                    })
-                    ->icon(fn($record) => match ($record->condition) {
-                        'new' => 'heroicon-o-check-circle',
-                        'used' => 'heroicon-m-at-symbol',
-                        'damaged' => 'heroicon-m-sparkles',
-                    })
                     ->label('Condition'),
                 Tables\Columns\TextColumn::make('date')
                     ->label('Date')
@@ -112,9 +102,12 @@ class AssetResource extends Resource
                     ->attribute('condition')
             ], layout: Tables\Enums\FiltersLayout::AboveContent)
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
-                Tables\Actions\ViewAction::make(),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\DeleteAction::make(),
+                    Tables\Actions\ViewAction::make(),
+                ])
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

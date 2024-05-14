@@ -19,7 +19,7 @@ class MaintenanceResource extends Resource
 {
     protected static ?string $model = Maintenance::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'iconpark-tool';
 
     protected static ?string $navigationGroup = 'Inventory';
 
@@ -85,8 +85,13 @@ class MaintenanceResource extends Resource
                     ->sortable(),
             ])
             ->filters([
-                //
-            ])
+                Tables\Filters\SelectFilter::make('asset_id')
+                    ->label('Asset')
+                    ->options(fn() => Asset::pluck('name', 'id')->toArray())
+                    ->searchable()
+                    ->multiple()
+                    ->placeholder('Show all'),
+            ], layout: Tables\Enums\FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),

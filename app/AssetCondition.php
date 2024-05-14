@@ -6,7 +6,7 @@ use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasIcon;
 use Filament\Support\Contracts\HasLabel;
 
-enum CommodityCondition: string implements HasColor, HasIcon, HasLabel
+enum AssetCondition: string implements HasColor, HasIcon, HasLabel
 {
     case New = 'new';
     case Used = 'used';
@@ -15,18 +15,18 @@ enum CommodityCondition: string implements HasColor, HasIcon, HasLabel
     public function getColor(): string
     {
         return match ($this) {
-            self::New => 'green',
-            self::Used => 'yellow',
-            self::Damaged => 'red',
+            self::New => 'success',
+            self::Used => 'primary',
+            self::Damaged => 'danger',
         };
     }
 
     public function getIcon(): string
     {
         return match ($this) {
-            self::New => 'heroicon-o-check-circle',
-            self::Used => 'heroicon-m-at-symbol',
-            self::Damaged => 'heroicon-m-sparkles',
+            self::New => 'heroicon-s-check-circle',
+            self::Used => 'heroicon-o-clipboard-document-check',
+            self::Damaged => 'heroicon-s-x-circle',
         };
     }
 

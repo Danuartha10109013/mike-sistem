@@ -2,13 +2,17 @@
 
 namespace App\Models;
 
-use App\Observers\AssetObserver;
+use App\AssetCondition;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Asset extends Model
 {
+    protected $casts = [
+        'condition' => AssetCondition::class,
+    ];
+
     public static function number()
     {
         $last = self::latest()->first();
@@ -46,7 +50,7 @@ class Asset extends Model
 
     public function maintenances(): HasMany
     {
-        return $this->hasMany(Maintenance::class);
+        return $this->hasMany(Maintenance::class)->latest();
     }
 
     public function scopeNew($query)
