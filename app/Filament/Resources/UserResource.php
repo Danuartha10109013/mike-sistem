@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
 use App\Models\User;
+use App\UserRole;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -55,9 +56,14 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('username')
                     ->searchable()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('role')
+                    ->badge()
+                    ->sortable(),
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('role')
+                    ->options(UserRole::class)
+                    ->label('Role'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make()->hidden(fn($record) => $record->id === auth()->id()),
