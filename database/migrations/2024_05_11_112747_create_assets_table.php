@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->string('number')->unique();
             $table->string('name');
             $table->integer('quantity');
+            $table->double('price');
             $table->date('date');
             $table->string('condition');
             $table->timestamps();

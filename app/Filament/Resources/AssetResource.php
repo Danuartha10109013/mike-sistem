@@ -50,6 +50,10 @@ class AssetResource extends Resource
                     ->label('Quantity')
                     ->searchable()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('price')
+                    ->label('Price')
+                    ->searchable()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('brand.name')
                     ->label('Brand')
                     ->searchable()
@@ -133,6 +137,8 @@ class AssetResource extends Resource
                                 ->label('Name'),
                             Components\TextEntry::make('quantity')
                                 ->label('Quantity'),
+                            Components\TextEntry::make('price')
+                                ->label('Price'),
                             Components\TextEntry::make('brand.name')
                                 ->label('Brand'),
                             Components\TextEntry::make('category.name')
@@ -210,6 +216,11 @@ class AssetResource extends Resource
                     ->required()
                     ->type('number')
                     ->placeholder('Enter the quantity of the asset'),
+                Forms\Components\TextInput::make('price')
+                    ->label('Price')
+                    ->required()
+                    ->type('number')
+                    ->placeholder('Enter the price of the asset'),
                 Forms\Components\Select::make('brand_id')
                     ->label('Brand')
                     ->required()

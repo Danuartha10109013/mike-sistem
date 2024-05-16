@@ -32,6 +32,7 @@ class AssetSeeder extends Seeder
                 'category_id' => $categories->random()->id,
                 'room_id' => $rooms->random()->id,
                 'user_id' => $users->random()->id,
+                'price' => $faker->randomFloat(2, 100, 1000),
                 'date' => $faker->dateTimeBetween('-1 year', 'now'),
                 'condition' => $faker->randomElement(['new', 'used', 'damaged']),
                 'created_at' => now()->addMinutes($i),

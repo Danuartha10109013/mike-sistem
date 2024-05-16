@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\MaintenanceStatus;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -63,6 +64,24 @@ class Maintenance extends Model
     public function isCompleted(): bool
     {
         return $this->status === MaintenanceStatus::Completed;
+    }
+
+    public function scopeApprovedAllTime(Builder $builder): Builder
+    {
+        return $builder->where('status', MaintenanceStatus::Approved);
+    }
+
+    public function scopeApprovedThisMonth(Builder $builder): Builder
+    {
+        return $builder->where('status', MaintenanceStatus::Approved)
+            ->where('approval_date', '>=', now()->startOfMonth());
+    }
+
+    public function scopeApprovedLastMonth(Builder $builder): Builder
+    {
+        return $builder->where('status', MaintenanceStatus::Approved)
+            ->where('approval_date', '>=', now()->startOfMonth()->subMonth())
+            ->where('approval_date', '<', now()->subMonth()->endOfMonth());
     }
 
 }

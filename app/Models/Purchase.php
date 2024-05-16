@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use App\MaintenanceStatus;
 use App\PurchaseStatus;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -68,5 +70,17 @@ class Purchase extends Model
         return $this->status === PurchaseStatus::Completed;
     }
 
-    
+
+    public function scopeApprovedThisMonth(Builder $builder): Builder
+    {
+        return $builder->where('status', MaintenanceStatus::Approved)
+            ->where('approval_date', '>=', now()->startOfMonth());
+    }
+
+    public function scopeApprovedLastMonth(Builder $builder): Builder
+    {
+        return $builder->where('status', MaintenanceStatus::Approved)
+            ->where('approval_date', '>=', now()->startOfMonth()->subMonth())
+            ->where('approval_date', '<', now()->subMonth()->endOfMonth());
+    }
 }
