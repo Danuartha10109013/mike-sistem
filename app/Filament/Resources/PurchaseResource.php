@@ -140,7 +140,8 @@ class PurchaseResource extends Resource
             ->actions([
                 Tables\Actions\ActionGroup::make([
                     Tables\Actions\ViewAction::make(),
-                    Tables\Actions\EditAction::make(),
+                    // Edit only for creators except for admins
+                    Tables\Actions\EditAction::make()->hidden(fn(Purchase $purchase) => $purchase->user_id !== auth()->id() && !auth()->user()->isAdmin()),
                     Tables\Actions\Action::make('Approve')
                         ->requiresConfirmation()
                         ->action(function (Purchase $purchase) {
@@ -148,7 +149,7 @@ class PurchaseResource extends Resource
                             Notification::make()->success()->title('Purchase approved')->icon('heroicon-o-check-circle')->send();
                         })
                         ->icon('heroicon-o-check-circle')
-                        ->hidden(fn(Purchase $purchase) => !$purchase->isPending()),
+                        ->hidden(fn(Purchase $purchase) => !$purchase->isPending() || !auth()->user()->isAdmin()),
                     Tables\Actions\Action::make('Reject')
                         ->requiresConfirmation()
                         ->action(function (Purchase $purchase) {
@@ -159,7 +160,7 @@ class PurchaseResource extends Resource
                             Notification::make()->success()->title('Purchase rejected')->icon('heroicon-o-x-circle')->send();
                         })
                         ->icon('heroicon-o-x-circle')
-                        ->hidden(fn(Purchase $purchase) => !$purchase->isPending()),
+                        ->hidden(fn(Purchase $purchase) => !$purchase->isPending() || !auth()->user()->isAdmin()),
                     Tables\Actions\Action::make('Complete')
                         ->requiresConfirmation()
                         ->action(function (Purchase $purchase) {
@@ -170,7 +171,7 @@ class PurchaseResource extends Resource
                             Notification::make()->success()->title('Purchase completed')->icon('heroicon-o-check-circle')->send();
                         })
                         ->icon('heroicon-o-check-circle')
-                        ->hidden(fn(Purchase $purchase) => !$purchase->isApproved()),
+                        ->hidden(fn(Purchase $purchase) => !$purchase->isApproved() || !auth()->user()->isAdmin()),
 
                 ]),
             ])

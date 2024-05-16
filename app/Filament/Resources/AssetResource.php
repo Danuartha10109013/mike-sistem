@@ -28,6 +28,7 @@ class AssetResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-s-archive-box';
 
     protected static ?string $navigationGroup = 'Inventory';
+
     protected static SubNavigationPosition $subNavigationPosition = SubNavigationPosition::Top;
 
     /**
@@ -163,6 +164,7 @@ class AssetResource extends Resource
             Pages\ViewAsset::class,
             Pages\EditAsset::class,
             Pages\ViewAssetMaintenances::class,
+            Pages\ViewAssetPurchases::class,
         ]);
     }
 
@@ -181,6 +183,7 @@ class AssetResource extends Resource
             'edit' => Pages\EditAsset::route('/{record}/edit'),
             'view' => Pages\ViewAsset::route('/{record}'),
             'maintenances' => Pages\ViewAssetMaintenances::route('/{record}/maintenances'),
+            'purchases' => Pages\ViewAssetPurchases::route('/{record}/purchases'),
         ];
     }
 
