@@ -19,13 +19,13 @@ class DashboardStats extends StatsOverviewWidget
             StatsOverviewWidget\Stat::make('Total Users', User::count())
                 ->icon('heroicon-o-user-group')
                 ->color('blue'),
-            StatsOverviewWidget\Stat::make('Total Commodities', Asset::count())
+            StatsOverviewWidget\Stat::make('Total Assets', Asset::count())
                 ->icon('heroicon-s-archive-box')
                 ->color('green'),
-            StatsOverviewWidget\Stat::make('Total Commodities in Stock', Asset::where('quantity', '>', 0)->count())
+            StatsOverviewWidget\Stat::make('Total Asset in Stock', Asset::where('quantity', '>', 0)->count())
                 ->icon('heroicon-s-archive-box')
                 ->color('yellow'),
-            
+
         ];
     }
 }

@@ -122,38 +122,36 @@ class AssetResource extends Resource
     public static function infolist(Infolist $infolist): Infolist
     {
         return $infolist->schema([
-            Components\Section::make()
-                ->schema([
-                    Components\Split::make([
-                        Components\Grid::make(2)
-                            ->schema([
-                                Components\Group::make([
-                                    Components\TextEntry::make('number')
-                                        ->label('Number'),
-                                    Components\TextEntry::make('name')
-                                        ->label('Name'),
-                                    Components\TextEntry::make('quantity')
-                                        ->label('Quantity'),
-                                    Components\TextEntry::make('brand.name')
-                                        ->label('Brand'),
-                                    Components\TextEntry::make('category.name')
-                                        ->label('Category'),
-                                ]),
-                                Components\Group::make([
-                                    Components\TextEntry::make('room.name')
-                                        ->label('Room'),
-                                    Components\TextEntry::make('condition')
-                                        ->label('Condition'),
-                                    Components\TextEntry::make('date')
-                                        ->label('Date'),
-                                    Components\TextEntry::make('user.name')
-                                        ->label('User'),
-                                    Components\TextEntry::make('created_at')
-                                        ->label('Created At'),
-                                ])
-                            ])
-                    ]),
-                ])
+            Components\Section::make()->schema([
+                Components\Split::make([
+                    Components\Grid::make(2)->schema([
+                        Components\Group::make([
+                            Components\TextEntry::make('number')
+                                ->label('Number'),
+                            Components\TextEntry::make('name')
+                                ->label('Name'),
+                            Components\TextEntry::make('quantity')
+                                ->label('Quantity'),
+                            Components\TextEntry::make('brand.name')
+                                ->label('Brand'),
+                            Components\TextEntry::make('category.name')
+                                ->label('Category'),
+                        ]),
+                        Components\Group::make([
+                            Components\TextEntry::make('room.name')
+                                ->label('Room'),
+                            Components\TextEntry::make('condition')
+                                ->label('Condition'),
+                            Components\TextEntry::make('date')
+                                ->label('Date'),
+                            Components\TextEntry::make('user.name')
+                                ->label('User'),
+                            Components\TextEntry::make('created_at')
+                                ->label('Created At'),
+                        ])
+                    ])
+                ]),
+            ])
                 ->collapsible()
                 ->description('View the details of the asset.')
         ]);

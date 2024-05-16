@@ -36,10 +36,10 @@ enum PurchaseStatus: string implements HasColor, HasIcon, HasLabel
     public function getColor(): string|array|null
     {
         return match ($this) {
-            self::Pending => 'gray',
-            self::Approved => 'green',
-            self::Completed => 'blue',
-            self::Rejected => 'red',
+            self::Pending => 'secondary',
+            self::Approved => 'success',
+            self::Completed => 'primary',
+            self::Rejected => 'danger',
         };
     }
 }

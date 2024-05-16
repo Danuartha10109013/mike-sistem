@@ -39,4 +39,34 @@ class Purchase extends Model
     {
         return $this->belongsTo(User::class, 'rejected_by');
     }
+
+    public function approved(): bool
+    {
+        $this->status = PurchaseStatus::Approved;
+        $this->approved_by = auth()->id();
+        $this->approval_date = now();
+        return $this->save();
+    }
+
+    public function isPending(): bool
+    {
+        return $this->status === PurchaseStatus::Pending;
+    }
+
+    public function isApproved(): bool
+    {
+        return $this->status === PurchaseStatus::Approved;
+    }
+
+    public function isRejected(): bool
+    {
+        return $this->status === PurchaseStatus::Rejected;
+    }
+
+    public function isCompleted(): bool
+    {
+        return $this->status === PurchaseStatus::Completed;
+    }
+
+    
 }

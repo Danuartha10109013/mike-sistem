@@ -8,12 +8,20 @@ use App\Models\Asset;
 use App\Models\Purchase;
 use App\Models\User;
 use App\PurchaseStatus;
+use App\UserRole;
 use Exception;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Infolists\Components\Grid;
+use Filament\Infolists\Components\Group;
+use Filament\Infolists\Components\Section;
+use Filament\Infolists\Components\Split;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Infolist;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -25,6 +33,16 @@ class PurchaseResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-shopping-cart';
 
     protected static ?string $navigationGroup = 'Inventory';
+
+
+    public static function getNavigationBadge(): ?string
+    {
+        if (auth()->user()->role === UserRole::Admin) {
+            return Purchase::where('status', PurchaseStatus::Pending)->count();
+        }
+
+        return null;
+    }
 
     public static function form(Form $form): Form
     {
@@ -104,7 +122,7 @@ class PurchaseResource extends Resource
                 Tables\Columns\TextColumn::make('status')
                     ->label('Status')
                     ->badge()
-            ])
+            ])->defaultSort('created_at', 'desc')
             ->filters([
                 Tables\Filters\SelectFilter::make('asset_id')
                     ->label('Asset')
@@ -121,7 +139,39 @@ class PurchaseResource extends Resource
             ], layout: Tables\Enums\FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\ActionGroup::make([
+                    Tables\Actions\ViewAction::make(),
                     Tables\Actions\EditAction::make(),
+                    Tables\Actions\Action::make('Approve')
+                        ->requiresConfirmation()
+                        ->action(function (Purchase $purchase) {
+                            $purchase->approved();
+                            Notification::make()->success()->title('Purchase approved')->icon('heroicon-o-check-circle')->send();
+                        })
+                        ->icon('heroicon-o-check-circle')
+                        ->hidden(fn(Purchase $purchase) => !$purchase->isPending()),
+                    Tables\Actions\Action::make('Reject')
+                        ->requiresConfirmation()
+                        ->action(function (Purchase $purchase) {
+                            $purchase->status = PurchaseStatus::Rejected;
+                            $purchase->rejected_by = auth()->id();
+                            $purchase->rejection_date = now();
+                            $purchase->save();
+                            Notification::make()->success()->title('Purchase rejected')->icon('heroicon-o-x-circle')->send();
+                        })
+                        ->icon('heroicon-o-x-circle')
+                        ->hidden(fn(Purchase $purchase) => !$purchase->isPending()),
+                    Tables\Actions\Action::make('Complete')
+                        ->requiresConfirmation()
+                        ->action(function (Purchase $purchase) {
+                            $purchase->status = PurchaseStatus::Completed;
+                            $purchase->completed_by = auth()->id();
+                            $purchase->completion_date = now();
+                            $purchase->save();
+                            Notification::make()->success()->title('Purchase completed')->icon('heroicon-o-check-circle')->send();
+                        })
+                        ->icon('heroicon-o-check-circle')
+                        ->hidden(fn(Purchase $purchase) => !$purchase->isApproved()),
+
                 ]),
             ])
             ->bulkActions([
@@ -132,6 +182,59 @@ class PurchaseResource extends Resource
             ->emptyStateActions([
                 Tables\Actions\CreateAction::make(),
             ]);
+    }
+
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist->schema([
+            Section::make()->schema([
+                Split::make([
+                    Grid::make()->schema([
+                        Group::make([
+                            TextEntry::make('asset.name')
+                                ->label('Asset'),
+                            TextEntry::make('submission_date')
+                                ->label('Submission Date'),
+                            TextEntry::make('price')
+                                ->label('Price'),
+                            TextEntry::make('quantity')
+                                ->label('Quantity'),
+                            TextEntry::make('total')
+                                ->label('Total'),
+                        ])
+                    ]),
+                    Grid::make()->schema([
+                        Group::make([
+                            TextEntry::make('user.name')
+                                ->label('User'),
+                            TextEntry::make('status')
+                                ->badge(),
+                            TextEntry::make('notes')
+                                ->label('Notes'),
+                            TextEntry::make('approvedBy.name')
+                                ->label('Approved By')
+                                ->hidden(fn(Purchase $purchase) => !$purchase->isApproved()),
+                            TextEntry::make('approval_date')
+                                ->label('Approval Date')
+                                ->hidden(fn(Purchase $purchase) => !$purchase->isApproved()),
+                            TextEntry::make('rejectedBy.name')
+                                ->label('Rejected By')
+                                ->hidden(fn(Purchase $purchase) => !$purchase->isRejected()),
+                            TextEntry::make('rejection_date')
+                                ->label('Rejection Date')
+                                ->hidden(fn(Purchase $purchase) => !$purchase->isRejected()),
+                            TextEntry::make('completedBy.name')
+                                ->label('Completed By')
+                                ->hidden(fn(Purchase $purchase) => !$purchase->isCompleted()),
+                            TextEntry::make('completion_date')
+                                ->label('Completion Date')
+                                ->hidden(fn(Purchase $purchase) => !$purchase->isCompleted()),
+                        ])
+
+                    ])
+                ])
+            ])
+        ]);
     }
 
     public static function getRelations(): array
@@ -147,6 +250,7 @@ class PurchaseResource extends Resource
             'index' => Pages\ListPurchases::route('/'),
             'create' => Pages\CreatePurchase::route('/create'),
             'edit' => Pages\EditPurchase::route('/{record}/edit'),
+            'view' => Pages\ViewPurchase::route('/{record}'),
         ];
     }
 }
