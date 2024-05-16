@@ -21,7 +21,7 @@ class ViewAssetMaintenances extends ManageRelatedRecords
      */
     public static function getNavigationLabel(): string
     {
-        return 'Maintenances';
+        return 'Maintenance Histories';
     }
 
     public function getTitle(): string|Htmlable
@@ -39,29 +39,37 @@ class ViewAssetMaintenances extends ManageRelatedRecords
     public function table(Table $table): Table
     {
         return $table
+            ->description('A list of all approved purchases for this asset.')
             ->columns([
-                Tables\Columns\TextColumn::make('date')
-                    ->label('Date')
+                Tables\Columns\TextColumn::make('submission_date')
+                    ->label('Submission Date')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('type')
-                    ->label('Type')
+                Tables\Columns\TextColumn::make('price')
+                    ->label('Price')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('cost')
-                    ->label('Cost')
+                Tables\Columns\TextColumn::make('quantity')
+                    ->label('Quantity')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('total')
+                    ->label('Total')
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('user.name')
                     ->label('User')
                     ->searchable()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('total')
+                    ->summarize(Tables\Columns\Summarizers\Sum::make())
+                    ->label('Total'),
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\ViewAction::make()
+//                Tables\Actions\ViewAction::make()
             ]);
     }
 }

@@ -2,21 +2,67 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\MaintenanceStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Maintenance extends Model
 {
-    use HasFactory;
+    protected $casts = [
+        'status' => MaintenanceStatus::class
+    ];
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function asset(): BelongsTo
     {
         return $this->belongsTo(Asset::class);
     }
 
-    public function user(): BelongsTo
+    public function approvedBy(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'approved_by');
     }
+
+    public function completedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'completed_by');
+    }
+
+    public function rejectedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'rejected_by');
+    }
+
+    public function approved(): bool
+    {
+        $this->status = MaintenanceStatus::Approved;
+        $this->approved_by = auth()->id();
+        $this->approval_date = now();
+        return $this->save();
+    }
+
+    public function isPending(): bool
+    {
+        return $this->status === MaintenanceStatus::Pending;
+    }
+
+    public function isApproved(): bool
+    {
+        return $this->status === MaintenanceStatus::Approved;
+    }
+
+    public function isRejected(): bool
+    {
+        return $this->status === MaintenanceStatus::Rejected;
+    }
+
+    public function isCompleted(): bool
+    {
+        return $this->status === MaintenanceStatus::Completed;
+    }
+
 }

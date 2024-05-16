@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\AssetCondition;
+use App\MaintenanceStatus;
 use App\PurchaseStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -49,14 +50,24 @@ class Asset extends Model
         return $this->belongsTo(Brand::class);
     }
 
-    public function maintenances(): HasMany
+    public function purchases(): HasMany
     {
-        return $this->hasMany(Maintenance::class)->latest();
+        return $this->hasMany(Purchase::class)->latest();
     }
 
     public function approvedPurchases(): HasMany
     {
         return $this->hasMany(Purchase::class)->latest()->where('status', PurchaseStatus::Approved);
+    }
+
+    public function approvedMaintenances(): HasMany
+    {
+        return $this->maintenances()->where('status', MaintenanceStatus::Approved)->latest();
+    }
+
+    public function maintenances(): HasMany
+    {
+        return $this->hasMany(Maintenance::class)->latest();
     }
 
     public function scopeNew($query)
