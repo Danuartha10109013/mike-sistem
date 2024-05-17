@@ -22,4 +22,5 @@ class CreateAsset extends CreateRecord
             ->title('Asset created')
             ->body('The asset has been created successfully.');
     }
+    
 }
