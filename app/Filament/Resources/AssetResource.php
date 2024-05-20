@@ -27,9 +27,12 @@ class AssetResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-s-archive-box';
 
-    protected static ?string $navigationGroup = 'Inventory';
-
     protected static SubNavigationPosition $subNavigationPosition = SubNavigationPosition::Top;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('navigation_group.inventory');
+    }
 
     /**
      * @throws Exception
@@ -39,42 +42,42 @@ class AssetResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('number')
-                    ->label('Number')
+                    ->label(__('asset.column.number'))
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('name')
-                    ->label('Name')
+                    ->label(__('asset.column.name'))
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('quantity')
-                    ->label('Quantity')
+                    ->label(__('asset.column.quantity'))
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('price')
-                    ->label('Price')
+                    ->label(__('asset.column.price'))
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('brand.name')
-                    ->label('Brand')
+                    ->label(__('brand.title'))
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('category.name')
-                    ->label('Category')
+                    ->label(__('category.title'))
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('room.name')
-                    ->label('Room')
+                    ->label(__('room.title'))
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('condition')
                     ->badge()
-                    ->label('Condition'),
+                    ->label(__('asset.column.condition')),
                 Tables\Columns\TextColumn::make('date')
-                    ->label('Date')
+                    ->label(__('asset.column.date'))
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('user.name')
-                    ->label('User')
+                    ->label(__('asset.column.user'))
                     ->searchable()
                     ->sortable(),
             ])
@@ -82,19 +85,19 @@ class AssetResource extends Resource
                 SelectFilter::make('category_id')
                     ->multiple()
                     ->options(Category::pluck('name', 'id')->toArray())
-                    ->label('Category')
+                    ->label(__('category.title'))
                     ->attribute('category_id')
                     ->searchable(),
                 SelectFilter::make('room_id')
                     ->multiple()
                     ->options(Room::pluck('name', 'id')->toArray())
-                    ->label('Room')
+                    ->label(__('room.title'))
                     ->attribute('room_id')
                     ->searchable(),
                 SelectFilter::make('brand_id')
                     ->multiple()
                     ->options(Brand::pluck('name', 'id')->toArray())
-                    ->label('Brand')
+                    ->label(__('brand.title'))
                     ->attribute('brand_id')
                     ->searchable(),
                 SelectFilter::make('status')
@@ -132,35 +135,35 @@ class AssetResource extends Resource
                     Components\Grid::make(2)->schema([
                         Components\Group::make([
                             Components\TextEntry::make('number')
-                                ->label('Number'),
+                                ->label(__('asset.column.number')),
                             Components\TextEntry::make('name')
-                                ->label('Name'),
+                                ->label(__('asset.column.name')),
                             Components\TextEntry::make('quantity')
-                                ->label('Quantity'),
+                                ->label(__('asset.column.quantity')),
                             Components\TextEntry::make('price')
-                                ->label('Price'),
+                                ->label(__('asset.column.price')),
                             Components\TextEntry::make('brand.name')
-                                ->label('Brand'),
+                                ->label(__('brand.title')),
                             Components\TextEntry::make('category.name')
-                                ->label('Category'),
+                                ->label(__('category.title')),
                         ]),
                         Components\Group::make([
                             Components\TextEntry::make('room.name')
-                                ->label('Room'),
+                                ->label(__('room.title')),
                             Components\TextEntry::make('condition')
-                                ->label('Condition'),
+                                ->label(__('asset.column.condition')),
                             Components\TextEntry::make('date')
-                                ->label('Date'),
+                                ->label(__('asset.column.date')),
                             Components\TextEntry::make('user.name')
-                                ->label('User'),
+                                ->label(__('asset.column.user')),
                             Components\TextEntry::make('created_at')
-                                ->label('Created At'),
+                                ->label(__('asset.column.created_at')),
                         ])
                     ])
                 ]),
             ])
                 ->collapsible()
-                ->description('View the details of the asset.')
+                ->description(__('asset.infolist.description')),
         ]);
     }
 
@@ -198,68 +201,68 @@ class AssetResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('number')
-                    ->label('Number')
+                    ->label(__('asset.column.number'))
                     ->required()
                     ->readOnly()
                     ->unique()
                     ->maxLength(18)
                     ->minLength(18)
                     ->default(fn() => Asset::number())
-                    ->placeholder('Enter the number of the asset'),
+                    ->placeholder(__('asset.placeholder.number')),
                 Forms\Components\TextInput::make('name')
-                    ->label('Name')
+                    ->label(__('asset.column.name'))
                     ->required()
                     ->maxLength(255)
-                    ->placeholder('Enter the name of the asset'),
+                    ->placeholder(__('asset.placeholder.name')),
                 Forms\Components\TextInput::make('quantity')
-                    ->label('Quantity')
+                    ->label(__('asset.column.quantity'))
                     ->required()
                     ->type('number')
-                    ->placeholder('Enter the quantity of the asset'),
+                    ->placeholder(__('asset.placeholder.quantity')),
                 Forms\Components\TextInput::make('price')
-                    ->label('Price')
+                    ->label(__('asset.column.price'))
                     ->required()
                     ->type('number')
-                    ->placeholder('Enter the price of the asset'),
+                    ->placeholder(__('asset.placeholder.price')),
                 Forms\Components\Select::make('brand_id')
-                    ->label('Brand')
+                    ->label(__('brand.title'))
                     ->required()
                     ->searchable()
                     ->options(Brand::pluck('name', 'id')->toArray())
-                    ->placeholder('Select the category of the asset'),
+                    ->placeholder(__('asset.placeholder.brand')),
                 Forms\Components\Select::make('category_id')
-                    ->label('Category')
+                    ->label(__('category.title'))
                     ->required()
                     ->searchable()
                     ->options(Category::pluck('name', 'id')->toArray())
-                    ->placeholder('Select the category of the asset'),
+                    ->placeholder(__('asset.placeholder.category')),
                 Forms\Components\Select::make('room_id')
-                    ->label('Room')
+                    ->label(__('room.title'))
                     ->required()
                     ->searchable()
                     ->options(Room::pluck('name', 'id')->toArray())
-                    ->placeholder('Select the room of the asset'),
+                    ->placeholder(__('asset.placeholder.room')),
                 Forms\Components\Select::make('condition')
-                    ->label('Condition')
+                    ->label(__('asset.column.condition'))
                     ->required()
                     ->options([
                         'new' => 'New',
                         'used' => 'Used',
                         'damaged' => 'Damaged',
                     ])
-                    ->placeholder('Select the condition of the asset'),
+                    ->placeholder(__('asset.placeholder.condition')),
                 Forms\Components\DatePicker::make('date')
-                    ->label('Date')
+                    ->label(__('asset.column.date'))
                     ->default(now())
                     ->required()
-                    ->placeholder('Select the date of the asset'),
+                    ->placeholder(__('asset.placeholder.date')),
                 Forms\Components\Select::make('user_id')
-                    ->label('User')
+                    ->label(__('asset.column.user'))
                     ->required()
                     ->searchable()
                     ->default(fn() => auth()->id())
                     ->options(User::pluck('name', 'id')->toArray())
-                    ->placeholder('Select the user of the asset'),
+                    ->placeholder(__('asset.placeholder.user')),
             ]);
     }
 }

@@ -17,20 +17,28 @@ class CategoryResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationGroup = 'Data';
+    public static function getNavigationGroup(): ?string
+    {
+        return __('navigation_group.data');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('category.title');
+    }
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
-                    ->label('Name')
-                    ->placeholder('Enter the category name')
+                    ->label(__('category.column.name'))
+                    ->placeholder(__('category.placeholder.name'))
                     ->required()
                     ->maxLength(255),
                 Forms\Components\Textarea::make('description')
-                    ->label('Description')
-                    ->placeholder('Enter the category description')
+                    ->label(__('category.column.description'))
+                    ->placeholder(__('category.placeholder.description'))
                     ->rows(3),
             ]);
     }
@@ -40,7 +48,7 @@ class CategoryResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
-                    ->label('Name')
+                    ->label(__('category.column.name'))
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('description')

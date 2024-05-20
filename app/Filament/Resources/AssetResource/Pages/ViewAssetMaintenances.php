@@ -21,7 +21,7 @@ class ViewAssetMaintenances extends ManageRelatedRecords
      */
     public static function getNavigationLabel(): string
     {
-        return 'Maintenance Histories';
+        return __('asset.navigation.maintenance_histories');
     }
 
     public function getTitle(): string|Htmlable

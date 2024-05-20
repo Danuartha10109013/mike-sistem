@@ -39,21 +39,21 @@ class DashboardStats extends StatsOverviewWidget
         $purchaseDescriptionColor = $percentage == 0 ? 'secondary' : ($percentage > 0 ? 'danger' : 'success');
 
         return [
-            StatsOverviewWidget\Stat::make('Total Users', User::count())
+            StatsOverviewWidget\Stat::make(__('dashboard.widgets.stats.user.label'), User::count())
                 ->icon('heroicon-o-user-group')
                 ->color('blue'),
-            StatsOverviewWidget\Stat::make('Total Assets', Asset::count())
+            StatsOverviewWidget\Stat::make(__('dashboard.widgets.stats.asset.label'), Asset::count())
                 ->icon('heroicon-s-archive-box')
                 ->color('green'),
-            StatsOverviewWidget\Stat::make('Total Assets Value', 'Rp. ' . number_format($assetValue, 0, ',', '.'))
+            StatsOverviewWidget\Stat::make(__('dashboard.widgets.stats.asset_value.label'), 'Rp. ' . number_format($assetValue, 0, ',', '.'))
                 ->icon('heroicon-s-currency-dollar')
                 ->color('yellow'),
-            StatsOverviewWidget\Stat::make('Maintenance This Month', 'Rp. ' . number_format($maintenanceValueThisMonth, 0, ',', '.'))
+            StatsOverviewWidget\Stat::make(__('dashboard.widgets.stats.purchase_this_month.label'), 'Rp. ' . number_format($maintenanceValueThisMonth, 0, ',', '.'))
                 ->icon('heroicon-o-calendar')
                 ->description($descriptionText)
                 ->descriptionIcon($descriptionIcon)
                 ->color($descriptionColor),
-            StatsOverviewWidget\Stat::make('Purchase This Month', 'Rp. ' . number_format($purchaseValueThisMonth, 0, ',', '.'))
+            StatsOverviewWidget\Stat::make(__('dashboard.widgets.stats.maintenance_this_month.label'), 'Rp. ' . number_format($purchaseValueThisMonth, 0, ',', '.'))
                 ->icon('heroicon-o-shopping-cart')
                 ->description($purchaseDescriptionText)
                 ->descriptionIcon($purchaseDescriptionIcon)

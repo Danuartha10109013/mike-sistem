@@ -32,8 +32,10 @@ class PurchaseResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-shopping-cart';
 
-    protected static ?string $navigationGroup = 'Inventory';
-
+    public static function getNavigationGroup(): ?string
+    {
+        return __('navigation_group.inventory');
+    }
 
     public static function getNavigationBadge(): ?string
     {

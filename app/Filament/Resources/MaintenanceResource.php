@@ -31,7 +31,10 @@ class MaintenanceResource extends Resource
 
     protected static ?string $navigationIcon = 'iconpark-tool';
 
-    protected static ?string $navigationGroup = 'Inventory';
+    public static function getNavigationGroup(): ?string
+    {
+        return __('navigation_group.inventory');
+    }
 
 
     public static function getNavigationBadge(): ?string

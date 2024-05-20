@@ -4,11 +4,16 @@ namespace App\Filament\Widgets;
 
 use App\Models\Maintenance;
 use Filament\Widgets\ChartWidget;
+use Illuminate\Contracts\Support\Htmlable;
 
 class MaintenanceChart extends ChartWidget
 {
     protected static ?string $heading = 'Maintenance Cost Chart';
 
+    public function getHeading(): string|Htmlable|null
+    {
+        return __('dashboard.widgets.charts.maintenance_cost.label');
+    }
 
     protected function getData(): array
     {

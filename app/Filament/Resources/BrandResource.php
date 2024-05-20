@@ -17,20 +17,29 @@ class BrandResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-bookmark-square';
 
-    protected static ?string $navigationGroup = 'Data';
+    public static function getNavigationGroup(): ?string
+    {
+        return __('navigation_group.data');
+    }
+
+
+    public static function getModelLabel(): string
+    {
+        return __('brand.title');
+    }
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
-                    ->label('Name')
-                    ->placeholder('Enter the brand name')
+                    ->label(__('brand.column.name'))
+                    ->placeholder(__('brand.placeholder.name'))
                     ->required()
                     ->maxLength(255),
                 Forms\Components\Textarea::make('description')
-                    ->label('Description')
-                    ->placeholder('Enter the brand description')
+                    ->label(__('brand.column.description'))
+                    ->placeholder(__('brand.placeholder.description'))
                     ->rows(3),
             ]);
     }
@@ -40,11 +49,11 @@ class BrandResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
-                    ->label('Name')
+                    ->label(__('brand.column.name'))
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('description')
-                    ->label('Description')
+                    ->label(__('brand.column.description'))
                     ->searchable()
                     ->sortable(),
             ])

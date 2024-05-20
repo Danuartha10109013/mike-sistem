@@ -18,6 +18,12 @@ class UserResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-users';
     protected static ?string $navigationGroup = 'Access';
 
+    public static function getNavigationGroup(): ?string
+    {
+        return __('navigation_group.access');
+    }
+
+
     public static function canViewAny(): bool
     {
         return auth()->user()->isAdmin();

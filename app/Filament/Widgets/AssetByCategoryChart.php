@@ -4,12 +4,16 @@ namespace App\Filament\Widgets;
 
 use App\Models\Category;
 use Filament\Widgets\ChartWidget;
+use Illuminate\Contracts\Support\Htmlable;
 
 class AssetByCategoryChart extends ChartWidget
 {
-    protected static ?string $heading = 'Asset By Category';
-
     protected static ?int $sort = 1;
+
+    public function getHeading(): string|Htmlable|null
+    {
+        return __('dashboard.widgets.charts.asset_by_category.label');
+    }
 
     protected function getData(): array
     {

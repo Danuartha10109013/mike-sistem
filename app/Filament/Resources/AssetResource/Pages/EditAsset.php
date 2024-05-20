@@ -17,61 +17,66 @@ class EditAsset extends EditRecord
 {
     protected static string $resource = AssetResource::class;
 
+    public static function getNavigationLabel(): string
+    {
+        return __('asset.navigation.edit_asset');
+    }
+
     public function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\TextInput::make('number')
-                    ->label('Number')
+                    ->label(__('asset.column.number'))
                     ->required()
                     ->readOnly()
                     ->unique(ignoreRecord: true)
                     ->maxLength(18)
                     ->minLength(18)
-                    ->placeholder('Enter the number of the asset'),
+                    ->placeholder(__('asset.placeholder.number')),
                 Forms\Components\TextInput::make('name')
-                    ->label('Name')
+                    ->label(__('asset.column.name'))
                     ->required()
                     ->maxLength(255)
-                    ->placeholder('Enter the name of the asset'),
+                    ->placeholder(__('asset.placeholder.name')),
                 Forms\Components\TextInput::make('quantity')
-                    ->label('Quantity')
+                    ->label(__('asset.column.quantity'))
                     ->required()
                     ->type('number')
-                    ->placeholder('Enter the quantity of the asset'),
+                    ->placeholder(__('asset.placeholder.quantity')),
                 Forms\Components\Select::make('brand_id')
-                    ->label('Brand')
+                    ->label(__('brand.title'))
                     ->required()
                     ->options(Brand::pluck('name', 'id')->toArray())
-                    ->placeholder('Select the category of the asset'),
+                    ->placeholder(__('asset.placeholder.brand')),
                 Forms\Components\Select::make('category_id')
-                    ->label('Category')
+                    ->label(__('category.title'))
                     ->required()
                     ->options(Category::pluck('name', 'id')->toArray())
-                    ->placeholder('Select the category of the asset'),
+                    ->placeholder(__('asset.placeholder.category')),
                 Forms\Components\Select::make('room_id')
-                    ->label('Room')
+                    ->label(__('room.title'))
                     ->required()
                     ->options(Room::pluck('name', 'id')->toArray())
-                    ->placeholder('Select the room of the asset'),
+                    ->placeholder(__('asset.placeholder.room')),
                 Forms\Components\Select::make('condition')
-                    ->label('Condition')
+                    ->label(__('asset.column.condition'))
                     ->required()
                     ->options([
                         'new' => 'New',
                         'used' => 'Used',
                         'damaged' => 'Damaged',
                     ])
-                    ->placeholder('Select the condition of the asset'),
+                    ->placeholder(__('asset.placeholder.condition')),
                 Forms\Components\DatePicker::make('date')
-                    ->label('Date')
+                    ->label(__('asset.column.date'))
                     ->required()
-                    ->placeholder('Select the date of the asset'),
+                    ->placeholder(__('asset.placeholder.date')),
                 Forms\Components\Select::make('user_id')
-                    ->label('User')
+                    ->label(__('asset.column.user'))
                     ->required()
                     ->options(User::pluck('name', 'id')->toArray())
-                    ->placeholder('Select the user of the asset'),
+                    ->placeholder(__('asset.placeholder.user')),
             ]);
     }
 

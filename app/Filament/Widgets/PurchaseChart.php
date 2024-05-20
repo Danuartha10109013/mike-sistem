@@ -4,10 +4,14 @@ namespace App\Filament\Widgets;
 
 use App\Models\Purchase;
 use Filament\Widgets\ChartWidget;
+use Illuminate\Contracts\Support\Htmlable;
 
 class PurchaseChart extends ChartWidget
 {
-    protected static ?string $heading = 'Purchase Cost Chart';
+    public function getHeading(): string|Htmlable|null
+    {
+        return __('dashboard.widgets.charts.purchase_cost.label');
+    }
 
 
     protected function getData(): array

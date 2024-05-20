@@ -17,7 +17,15 @@ class RoomResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationGroup = 'Data';
+    public static function getNavigationGroup(): ?string
+    {
+        return __('navigation_group.data');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('room.title');
+    }
 
 
     public static function form(Form $form): Form
@@ -25,13 +33,13 @@ class RoomResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
-                    ->label('Name')
-                    ->placeholder('Enter the category name')
+                    ->label(__('room.column.name'))
+                    ->placeholder(__('room.placeholder.name'))
                     ->required()
                     ->maxLength(255),
                 Forms\Components\Textarea::make('description')
-                    ->label('Description')
-                    ->placeholder('Enter the category description')
+                    ->label(__('room.column.description'))
+                    ->placeholder(__('room.placeholder.description'))
                     ->rows(3),
             ]);
     }
@@ -41,11 +49,11 @@ class RoomResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
-                    ->label('Name')
+                    ->label(__('room.column.name'))
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('description')
-                    ->label('Description')
+                    ->label(__('room.column.description'))
                     ->searchable()
                     ->sortable(),
             ])

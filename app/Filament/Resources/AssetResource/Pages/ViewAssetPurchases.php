@@ -21,7 +21,7 @@ class ViewAssetPurchases extends ManageRelatedRecords
      */
     public static function getNavigationLabel(): string
     {
-        return 'Purchase Histories';
+        return __('asset.navigation.purchase_histories');
     }
 
     public function getTitle(): string|Htmlable
