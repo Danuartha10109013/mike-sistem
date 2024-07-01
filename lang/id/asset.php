@@ -1,6 +1,6 @@
 <?php
 return [
-    'asset' => 'Aset',
+    'title' => 'Aset',
     'column' => [
         'number' => 'Nomor',
         'name' => 'Nama',
@@ -31,5 +31,17 @@ return [
         'edit_asset' => 'Ubah Aset',
         'maintenance_histories' => 'Riwayat Pemeliharaan',
         'purchase_histories' => 'Riwayat Pembelian',
-    ]
+    ],
+
+    // Page
+    'view_asset_maintenances' => [
+        'title' => 'Lihat Pemeliharaan Aset',
+        'breadcrumb' => 'Pemeliharaan',
+        'description' => 'Daftar semua pembelian yang disetujui untuk aset ini.',
+    ],
+    'view_asset_purchases' => [
+        'title' => 'Lihat Pembelian Aset',
+        'breadcrumb' => 'Pembelian',
+        'description' => 'Daftar semua pembelian yang disetujui untuk aset ini.',
+    ],
 ];

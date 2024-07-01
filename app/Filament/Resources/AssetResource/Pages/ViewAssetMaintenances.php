@@ -28,18 +28,18 @@ class ViewAssetMaintenances extends ManageRelatedRecords
     {
         $recordTitle = $this->getRecordTitle();
         $recordTitle = $recordTitle instanceof Htmlable ? $recordTitle->toHtml() : $recordTitle;
-        return "Viewing {$recordTitle} Maintenances";
+        return __('asset.view_asset_maintenances.title');
     }
 
     public function getBreadcrumb(): string
     {
-        return 'Maintenances';
+        return __('asset.view_asset_maintenances.breadcrumb');
     }
 
     public function table(Table $table): Table
     {
         return $table
-            ->description('A list of all approved purchases for this asset.')
+            ->description(__('asset.view_asset_maintenances.description'))
             ->columns([
                 Tables\Columns\TextColumn::make('submission_date')
                     ->label('Submission Date')

@@ -1,6 +1,6 @@
 <?php
 return [
-    'asset' => 'Asset',
+    'title' => 'Asset',
     'column' => [
         'number' => 'Number',
         'name' => 'Name',
@@ -31,5 +31,17 @@ return [
         'edit_asset' => 'Edit Asset',
         'maintenance_histories' => 'Maintenance Histories',
         'purchase_histories' => 'Purchase Histories',
-    ]
+    ],
+
+    // Page
+    'view_asset_maintenances' => [
+        'title' => 'View Asset Maintenances',
+        'breadcrumb' => 'Maintenances',
+        'description' => 'A list of all approved purchases for this asset.',
+    ],
+    'view_asset_purchases' => [
+        'title' => 'View Asset Purchases',
+        'breadcrumb' => 'Purchases',
+        'description' => 'A list of all approved purchases for this asset.',
+    ],
 ];

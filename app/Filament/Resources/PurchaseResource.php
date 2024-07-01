@@ -37,6 +37,12 @@ class PurchaseResource extends Resource
         return __('navigation_group.inventory');
     }
 
+
+    public static function getModelLabel(): string
+    {
+        return __('purchase.title');
+    }
+
     public static function getNavigationBadge(): ?string
     {
         if (auth()->user()->role === UserRole::Admin) {
@@ -51,42 +57,42 @@ class PurchaseResource extends Resource
         return $form
             ->schema([
                 Select::make('asset_id')
-                    ->label('Asset')
+                    ->label(__('asset.title'))
                     ->required()
                     ->options(fn() => Asset::pluck('name', 'id')->toArray())
                     ->searchable()
-                    ->placeholder('Select the asset'),
+                    ->placeholder(__('maintenance.placeholder.asset')),
                 DatePicker::make('submission_date')
-                    ->label('Submission Date')
+                    ->label(__('purchase.column.submission_date'))
                     ->required()
-                    ->placeholder('Select the submission date')
+                    ->placeholder(__('maintenance.placeholder.submission_date'))
                     ->default(now()),
                 TextInput::make('price')
-                    ->label('Price')
+                    ->label(__('purchase.column.price'))
                     ->required()
                     ->type('number')
-                    ->placeholder('Enter the price'),
+                    ->placeholder(__('maintenance.placeholder.price')),
                 TextInput::make('quantity')
-                    ->label('Quantity')
+                    ->label(__('purchase.column.quantity'))
                     ->required()
                     ->type('number')
-                    ->placeholder('Enter the quantity'),
+                    ->placeholder(__('maintenance.placeholder.quantity')),
                 TextInput::make('total')
-                    ->label('Total')
+                    ->label(__('purchase.column.total'))
                     ->required()
                     ->type('number')
-                    ->placeholder('Enter the total'),
+                    ->placeholder(__('maintenance.placeholder.total')),
                 Textarea::make('notes')
-                    ->label('Notes')
+                    ->label(__('purchase.column.notes'))
                     ->nullable()
-                    ->placeholder('Enter the notes'),
+                    ->placeholder(__('maintenance.placeholder.notes')),
                 Select::make('user_id')
-                    ->label('User')
+                    ->label(__('user.title'))
                     ->required()
                     ->options(fn() => User::pluck('name', 'id')->toArray())
                     ->searchable()
                     ->default(fn() => auth()->id())
-                    ->placeholder('Select the user'),
+                    ->placeholder(__('maintenance.placeholder.user')),
             ]);
     }
 
@@ -98,42 +104,42 @@ class PurchaseResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('asset.name')
-                    ->label('Asset')
+                    ->label(__('asset.title'))
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('submission_date')
-                    ->label('Submission Date')
+                    ->label(__('purchase.column.submission_date'))
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('price')
-                    ->label('Price')
+                    ->label(__('purchase.column.price'))
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('quantity')
-                    ->label('Quantity')
+                    ->label(__('purchase.column.quantity'))
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('total')
-                    ->label('Total')
+                    ->label(__('purchase.column.total'))
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('user.name')
-                    ->label('User')
+                    ->label(__('user.title'))
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('status')
-                    ->label('Status')
+                    ->label(__('purchase.column.status'))
                     ->badge()
             ])->defaultSort('created_at', 'desc')
             ->filters([
                 Tables\Filters\SelectFilter::make('asset_id')
-                    ->label('Asset')
+                    ->label(__('asset.title'))
                     ->options(fn() => Asset::pluck('name', 'id')->toArray())
                     ->searchable()
                     ->multiple()
                     ->placeholder('Show all'),
                 Tables\Filters\SelectFilter::make('status')
-                    ->label('Status')
+                    ->label(__('purchase.column.status'))
                     ->options(PurchaseStatus::class)
                     ->searchable()
                     ->multiple()

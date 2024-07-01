@@ -11,12 +11,18 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
 
 class UserResource extends Resource
 {
     protected static ?string $model = User::class;
+
     protected static ?string $navigationIcon = 'heroicon-o-users';
-    protected static ?string $navigationGroup = 'Access';
+
+    public static function getModelLabel(): string
+    {
+        return __('user.title');
+    }
 
     public static function getNavigationGroup(): ?string
     {
@@ -34,20 +40,24 @@ class UserResource extends Resource
         return $form
             ->schema([
                 TextInput::make('name')
-                    ->label('Name')
+                    ->label(__('user.column.name'))
+                    ->placeholder(__('user.placeholder.name'))
                     ->required(),
                 TextInput::make('username')
-                    ->label('Username')
+                    ->label(__('user.column.username'))
+                    ->placeholder(__('user.placeholder.username'))
                     ->required()
                     ->unique(),
                 TextInput::make('password')
-                    ->label('Password')
+                    ->label(__('user.placeholder.password'))
+                    ->placeholder(__('user.placeholder.password'))
                     ->password()
                     ->autocomplete('new-password')
                     ->required()
                     ->confirmed(),
                 TextInput::make('password_confirmation')
-                    ->label('Confirm Password')
+                    ->label(__('user.placeholder.confirm_password'))
+                    ->placeholder(__('user.placeholder.confirm_password'))
                     ->password()
                     ->autocomplete('new-password')
                     ->required()
@@ -60,12 +70,15 @@ class UserResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
+                    ->label(__('user.column.name'))
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('username')
+                    ->label(__('user.column.username'))
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('role')
+                    ->label(__('user.column.role'))
                     ->badge()
                     ->sortable(),
             ])
@@ -80,6 +93,7 @@ class UserResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
+                    ExportBulkAction::make(),
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);

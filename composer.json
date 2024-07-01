@@ -12,6 +12,9 @@
         "filament/forms": "^3.2",
         "laravel/framework": "^11.0",
         "laravel/tinker": "^2.9",
+        "psr/simple-cache": "^2.0",
+        "pxlrbt/filament-excel": "^2.3",
+        "yemenopensource/filament-excel": "^0.1.0",
         "z3d0x/filament-logger": "^0.7.1"
     },
     "require-dev": {

@@ -31,6 +31,11 @@ class MaintenanceResource extends Resource
 
     protected static ?string $navigationIcon = 'iconpark-tool';
 
+    public static function getModelLabel(): string
+    {
+        return __('maintenance.title');
+    }
+
     public static function getNavigationGroup(): ?string
     {
         return __('navigation_group.inventory');
@@ -51,42 +56,42 @@ class MaintenanceResource extends Resource
         return $form
             ->schema([
                 Select::make('asset_id')
-                    ->label('Asset')
+                    ->label(__('asset.title'))
                     ->required()
                     ->options(fn() => Asset::pluck('name', 'id')->toArray())
                     ->searchable()
-                    ->placeholder('Select the asset'),
+                    ->placeholder(__('maintenance.placeholder.asset')),
                 DatePicker::make('submission_date')
-                    ->label('Submission Date')
+                    ->label(__('maintenance.column.submission_date'))
                     ->required()
-                    ->placeholder('Select the submission date')
+                    ->placeholder(__('maintenance.placeholder.submission_date'))
                     ->default(now()),
                 TextInput::make('price')
-                    ->label('Price')
+                    ->label(__('maintenance.column.price'))
                     ->required()
                     ->type('number')
-                    ->placeholder('Enter the price'),
+                    ->placeholder(__('maintenance.placeholder.price')),
                 TextInput::make('quantity')
-                    ->label('Quantity')
+                    ->label(__('maintenance.column.quantity'))
                     ->required()
                     ->type('number')
-                    ->placeholder('Enter the quantity'),
+                    ->placeholder(__('maintenance.placeholder.quantity')),
                 TextInput::make('total')
-                    ->label('Total')
+                    ->label(__('maintenance.column.total'))
                     ->required()
                     ->type('number')
-                    ->placeholder('Enter the total'),
+                    ->placeholder(__('maintenance.placeholder.total')),
                 Textarea::make('notes')
-                    ->label('Notes')
+                    ->label(__('maintenance.column.notes'))
                     ->nullable()
-                    ->placeholder('Enter the notes'),
+                    ->placeholder(__('maintenance.placeholder.notes')),
                 Select::make('user_id')
-                    ->label('User')
+                    ->label(__('user.title'))
                     ->required()
                     ->options(fn() => User::pluck('name', 'id')->toArray())
                     ->searchable()
                     ->default(fn() => auth()->id())
-                    ->placeholder('Select the user'),
+                    ->placeholder(__('maintenance.placeholder.user')),
             ]);
     }
 
@@ -98,42 +103,42 @@ class MaintenanceResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('asset.name')
-                    ->label('Asset')
+                    ->label(__('asset.title'))
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('submission_date')
-                    ->label('Submission Date')
+                    ->label(__('maintenance.column.submission_date'))
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('price')
-                    ->label('Price')
+                    ->label(__('maintenance.column.price'))
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('quantity')
-                    ->label('Quantity')
+                    ->label(__('maintenance.column.quantity'))
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('total')
-                    ->label('Total')
+                    ->label(__('maintenance.column.total'))
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('user.name')
-                    ->label('User')
+                    ->label(__('user.title'))
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('status')
-                    ->label('Status')
+                    ->label(__('maintenance.column.status'))
                     ->badge()
             ])->defaultSort('created_at', 'desc')
             ->filters([
                 Tables\Filters\SelectFilter::make('asset_id')
-                    ->label('Asset')
+                    ->label(__('asset.title'))
                     ->options(fn() => Asset::pluck('name', 'id')->toArray())
                     ->searchable()
                     ->multiple()
                     ->placeholder('Show all'),
                 Tables\Filters\SelectFilter::make('status')
-                    ->label('Status')
+                    ->label(__('maintenance.column.status'))
                     ->options(MaintenanceStatus::class)
                     ->searchable()
                     ->multiple()
@@ -195,42 +200,43 @@ class MaintenanceResource extends Resource
                     Grid::make()->schema([
                         Group::make([
                             TextEntry::make('asset.name')
-                                ->label('Asset'),
+                                ->label(__('asset.title')),
                             TextEntry::make('submission_date')
-                                ->label('Submission Date'),
+                                ->label(__('maintenance.column.submission_date')),
                             TextEntry::make('price')
-                                ->label('Price'),
+                                ->label(__('maintenance.column.price')),
                             TextEntry::make('quantity')
-                                ->label('Quantity'),
+                                ->label(__('maintenance.column.quantity')),
                             TextEntry::make('total')
-                                ->label('Total'),
+                                ->label(__('maintenance.column.total')),
                         ])
                     ]),
                     Grid::make()->schema([
                         Group::make([
                             TextEntry::make('user.name')
-                                ->label('User'),
+                                ->label(__('user.title')),
                             TextEntry::make('status')
+                                ->label(__('maintenance.column.status'))
                                 ->badge(),
                             TextEntry::make('notes')
-                                ->label('Notes'),
+                                ->label(__('maintenance.column.notes')),
                             TextEntry::make('approvedBy.name')
-                                ->label('Approved By')
+                                ->label(__('maintenance.column.approved_by'))
                                 ->hidden(fn(Maintenance $maintenance) => !$maintenance->isApproved()),
                             TextEntry::make('approval_date')
-                                ->label('Approval Date')
+                                ->label(__('maintenance.column.approved_date'))
                                 ->hidden(fn(Maintenance $maintenance) => !$maintenance->isApproved()),
                             TextEntry::make('rejectedBy.name')
-                                ->label('Rejected By')
+                                ->label(__('maintenance.column.rejected_by'))
                                 ->hidden(fn(Maintenance $maintenance) => !$maintenance->isRejected()),
                             TextEntry::make('rejection_date')
-                                ->label('Rejection Date')
+                                ->label(__('maintenance.column.rejected_date'))
                                 ->hidden(fn(Maintenance $maintenance) => !$maintenance->isRejected()),
                             TextEntry::make('completedBy.name')
-                                ->label('Completed By')
+                                ->label(__('maintenance.column.completed_by'))
                                 ->hidden(fn(Maintenance $maintenance) => !$maintenance->isCompleted()),
                             TextEntry::make('completion_date')
-                                ->label('Completion Date')
+                                ->label(__('maintenance.column.completion_date'))
                                 ->hidden(fn(Maintenance $maintenance) => !$maintenance->isCompleted()),
                         ])
 

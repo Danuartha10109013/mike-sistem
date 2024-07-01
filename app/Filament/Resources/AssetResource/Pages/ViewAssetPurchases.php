@@ -26,20 +26,18 @@ class ViewAssetPurchases extends ManageRelatedRecords
 
     public function getTitle(): string|Htmlable
     {
-        $recordTitle = $this->getRecordTitle();
-        $recordTitle = $recordTitle instanceof Htmlable ? $recordTitle->toHtml() : $recordTitle;
-        return "Viewing {$recordTitle} Purchase Histories";
+        return __('asset.view_asset_purchases.title');
     }
 
     public function getBreadcrumb(): string
     {
-        return 'Purchase Histories';
+        return __('asset.view_asset_purchases.breadcrumb');
     }
 
     public function table(Table $table): Table
     {
         return $table
-            ->description('A list of all approved purchases for this asset.')
+            ->description(__('asset.view_asset_purchases.description'))
             ->columns([
                 Tables\Columns\TextColumn::make('submission_date')
                     ->label('Submission Date')

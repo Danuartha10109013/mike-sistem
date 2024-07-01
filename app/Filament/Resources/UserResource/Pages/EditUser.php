@@ -17,20 +17,24 @@ class EditUser extends EditRecord
     {
         return $form->schema([
             TextInput::make('name')
-                ->label('Name')
+                ->label(__('user.column.name'))
+                ->placeholder(__('user.placeholder.name'))
                 ->required(),
             TextInput::make('username')
-                ->label('Username')
+                ->label(__('user.column.username'))
+                ->placeholder(__('user.placeholder.username'))
                 ->required()
                 ->unique(ignoreRecord: true),
             TextInput::make('password')
-                ->label('Password')
+                ->label(__('user.placeholder.password'))
+                ->placeholder(__('user.placeholder.password'))
                 ->password()
                 ->autocomplete('new-password')
                 ->confirmed()
                 ->nullable(),
             TextInput::make('password_confirmation')
-                ->label('Confirm Password')
+                ->label(__('user.placeholder.confirm_password'))
+                ->placeholder(__('user.placeholder.confirm_password'))
                 ->password()
                 ->autocomplete('new-password')
                 ->nullable()
