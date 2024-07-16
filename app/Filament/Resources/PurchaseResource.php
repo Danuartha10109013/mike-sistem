@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Exports\PurchaseExporter;
 use App\Filament\Resources\PurchaseResource\Pages;
 use App\Filament\Resources\PurchaseResource\RelationManagers;
 use App\Models\Asset;
@@ -10,6 +11,7 @@ use App\Models\User;
 use App\PurchaseStatus;
 use App\UserRole;
 use Exception;
+use Filament\Actions\Exports\Enums\ExportFormat;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -24,6 +26,7 @@ use Filament\Infolists\Infolist;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\ExportAction;
 use Filament\Tables\Table;
 
 class PurchaseResource extends Resource
@@ -187,6 +190,15 @@ class PurchaseResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
+            ])
+            ->headerActions([
+                ExportAction::make()
+                    ->exporter(PurchaseExporter::class)
+                    ->formats([
+                        ExportFormat::Xlsx
+                    ])
+                    ->fileDisk('public')
+                    ->fileName('purchase_report.xlsx')
             ])
             ->emptyStateActions([
                 Tables\Actions\CreateAction::make(),

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Exports\MaintenanceExporter;
 use App\Filament\Resources\MaintenanceResource\Pages;
 use App\MaintenanceStatus;
 use App\Models\Asset;
@@ -9,6 +10,7 @@ use App\Models\Maintenance;
 use App\Models\User;
 use App\UserRole;
 use Exception;
+use Filament\Actions\Exports\Enums\ExportFormat;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -23,6 +25,7 @@ use Filament\Infolists\Infolist;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\ExportAction;
 use Filament\Tables\Table;
 use PDF;
 
@@ -198,6 +201,15 @@ class MaintenanceResource extends Resource
 //                    })
 //                    ->deselectRecordsAfterCompletion()
 
+            ])
+            ->headerActions([
+                ExportAction::make()
+                    ->exporter(MaintenanceExporter::class)
+                    ->formats([
+                        ExportFormat::Xlsx
+                    ])
+                    ->fileDisk('public')
+                    ->fileName('maintenance_report.xlsx')
             ])
             ->emptyStateActions([
                 Tables\Actions\CreateAction::make(),

@@ -68,6 +68,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->plugins([
                 FilamentSettingsHubPlugin::make()
-            ]);
+            ])
+            ->databaseNotifications();
     }
 }
