@@ -24,6 +24,7 @@ use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use PDF;
 
 class MaintenanceResource extends Resource
 {
@@ -129,7 +130,8 @@ class MaintenanceResource extends Resource
                 Tables\Columns\TextColumn::make('status')
                     ->label(__('maintenance.column.status'))
                     ->badge()
-            ])->defaultSort('created_at', 'desc')
+            ])
+            ->defaultSort('created_at', 'desc')
             ->filters([
                 Tables\Filters\SelectFilter::make('asset_id')
                     ->label(__('asset.title'))
@@ -186,6 +188,16 @@ class MaintenanceResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
+//                Tables\Actions\BulkAction::make('generate_report')
+//                    ->label('Generate Report')
+//                    ->action(function ($records) {
+//                        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadHTML('<h1>Maintenance Report</h1>');
+//                        return response()->streamDownload(function () use ($pdf) {
+//                            $pdf->output();
+//                        }, 'maintenance_report.pdf');
+//                    })
+//                    ->deselectRecordsAfterCompletion()
+
             ])
             ->emptyStateActions([
                 Tables\Actions\CreateAction::make(),
