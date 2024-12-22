@@ -10,15 +10,15 @@ class SitesSettings extends SettingsMigration
      */
     public function up(): void
     {
-        $this->migrator->add('sites.site_name', 'Sistem Manajemen Inventori');
-        $this->migrator->add('sites.site_description', 'Sistem Manajemen Inventori adalah aplikasi yang digunakan untuk mengelola inventori barang');
-        $this->migrator->add('sites.site_keywords', 'inventori, barang, manajemen, sistem, aplikasi');
+        $this->migrator->add('sites.site_name', 'Sistem Manajemen aset');
+        $this->migrator->add('sites.site_description', 'Sistem Manajemen aset adalah aplikasi yang digunakan untuk mengelola aset barang Gothru');
+        $this->migrator->add('sites.site_keywords', 'aset, barang, manajemen, sistem, aplikasi');
         $this->migrator->add('sites.site_profile', '');
         $this->migrator->add('sites.site_logo', '');
-        $this->migrator->add('sites.site_author', 'Muhammad Rizal Pahlevi');
-        $this->migrator->add('sites.site_address', 'Semarang, Indonesia');
-        $this->migrator->add('sites.site_email', 'diskominfo@semarangkota.go.id');
-        $this->migrator->add('sites.site_phone', '(024)3549446');
+        $this->migrator->add('sites.site_author', 'Mika Ancela');
+        $this->migrator->add('sites.site_address', 'Subang, Indonesia');
+        $this->migrator->add('sites.site_email', '');
+        $this->migrator->add('sites.site_phone', '');
         $this->migrator->add('sites.site_phone_code', '');
         $this->migrator->add('sites.site_location', 'Indonesia');
         $this->migrator->add('sites.site_currency', 'IDR');
