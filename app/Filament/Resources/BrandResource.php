@@ -22,7 +22,10 @@ class BrandResource extends Resource
         return __('navigation_group.data');
     }
 
-
+    public static function canViewAny(): bool
+    {
+        return auth()->user()->isUser();
+    }
     public static function getModelLabel(): string
     {
         return __('brand.title');

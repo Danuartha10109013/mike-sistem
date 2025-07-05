@@ -5,11 +5,11 @@ return [
     'actions' => [
 
         'open_documentation' => [
-            'label' => 'Documentation',
+            'label' => '',
         ],
 
         'open_github' => [
-            'label' => 'GitHub',
+            'label' => '',
         ],
 
     ],

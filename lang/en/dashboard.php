@@ -12,11 +12,11 @@ return [
             'asset_value' => [
                 'label' => 'Asset Value',
             ],
-            'maintenance_this_month' => [
-                'label' => 'Maintenance This Month',
-            ],
             'purchase_this_month' => [
                 'label' => 'Purchase This Month',
+            ],
+            'maintenance_this_month' => [
+                'label' => 'Maintenance This Month',
             ],
         ],
         'charts' => [

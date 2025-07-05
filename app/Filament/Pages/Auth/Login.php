@@ -9,6 +9,11 @@ use Illuminate\Validation\ValidationException;
 
 class Login extends BaseAuth
 {
+    // protected function getBrandLogo(): string
+    // {
+    //     return base_url('logo.png'); // Sesuaikan dengan path logo Anda
+    // }
+
     public function form(Form $form): Form
     {
         return $form->schema([

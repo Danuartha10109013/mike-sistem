@@ -18,7 +18,7 @@ enum PurchaseStatus: string implements HasColor, HasIcon, HasLabel
         return match ($this) {
             self::Pending => 'heroicon-o-clock',
             self::Approved => 'heroicon-o-check-circle',
-            self::Completed => 'heroicon-o-clipboard-check',
+            self::Completed => 'heroicon-o-check-circle',
             self::Rejected => 'heroicon-m-x-mark',
         };
     }

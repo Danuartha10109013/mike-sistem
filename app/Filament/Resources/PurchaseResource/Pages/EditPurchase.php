@@ -25,6 +25,7 @@ class EditPurchase extends EditRecord
                 ->required()
                 ->options(fn() => Asset::pluck('name', 'id')->toArray())
                 ->searchable()
+                ->disabled()
                 ->placeholder('Select the asset'),
             DatePicker::make('submission_date')
                 ->label('Submission Date')
@@ -35,17 +36,29 @@ class EditPurchase extends EditRecord
                 ->label('Price')
                 ->required()
                 ->type('number')
-                ->placeholder('Enter the price'),
+                ->placeholder('Enter the price')
+                ->afterStateUpdated(fn (callable $set, $state, callable $get) =>
+                    $set('total', (float) $state * (float) $get('quantity'))
+                ),
             TextInput::make('quantity')
                 ->label('Quantity')
-                ->required()
+                // ->required()
                 ->type('number')
-                ->placeholder('Enter the quantity'),
+                ->placeholder('Enter the quantity')
+                ->default(1)
+                ->hidden()
+                ->reactive()
+                ->afterStateUpdated(fn (callable $set, $state, callable $get) =>
+                    $set('total', (float) $state * (float) $get('price'))
+                ),
             TextInput::make('total')
                 ->label('Total')
                 ->required()
                 ->type('number')
-                ->placeholder('Enter the total'),
+                ->placeholder('Enter the total')
+                ->hidden()
+                ->readOnly(),
+
             Textarea::make('notes')
                 ->label('Notes')
                 ->nullable()
@@ -57,6 +70,15 @@ class EditPurchase extends EditRecord
                 ->searchable()
                 ->default(fn() => auth()->id())
                 ->placeholder('Select the user'),
+            Select::make('urgent')
+                ->label(__('Tingkat Kepentingan'))
+                ->required()
+                ->options([
+                    'Low' => 'Low',
+                    'Mid' => 'Mid',
+                    'Hight' => 'Hight',
+                ])
+                ->placeholder(__('Pilih tingkat kepentingan')),
         ]);
     }
 

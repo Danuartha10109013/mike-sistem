@@ -6,16 +6,20 @@ return [
         'name' => 'Nama',
         'quantity' => 'Kuantitas',
         'price' => 'Harga',
+        'decrease' => 'Harga Akhir & Penurunan % Pertahun',
         'condition' => 'Kondisi',
         'date' => 'Tanggal',
         'user' => 'Pengguna',
         'created_at' => 'Dibuat Pada',
+        'held_by_user' => 'Dipegang Oleh Pengguna?'
+
     ],
     'placeholder' => [
         'number' => 'Masukkan Nomor Aset',
         'name' => 'Masukkan Nama Aset',
         'quantity' => 'Masukkan Kuantitas Aset',
         'price' => 'Masukkan Harga Aset',
+        'decrease' => 'Masukkan Pernurunan % Pertahun Aset',
         'condition' => 'Masukkan Kondisi Aset',
         'date' => 'Masukkan Tanggal Aset',
         'user' => 'Masukkan Pengguna Aset',

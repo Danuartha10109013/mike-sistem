@@ -22,10 +22,13 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Model::unguard();
+        Filament::registerRenderHook('head.start', function () {
+            return '<link rel="icon" type="image/png" href="' . asset('favicon.ico') . '">';
+        });
 
         Filament::registerNavigationGroups([
-            'Data',
             'Inventory',
+            'Data',
             'Access',
         ]);
     }

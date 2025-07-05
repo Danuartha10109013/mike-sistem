@@ -50,6 +50,11 @@ class Asset extends Model
         return $this->belongsTo(Brand::class);
     }
 
+    // public function penyusutan(): BelongsTo
+    // {
+    //     return $this->belongsTo(Penyusutan::class);
+    // }
+
     public function purchases(): HasMany
     {
         return $this->hasMany(Purchase::class)->latest();
@@ -57,12 +62,12 @@ class Asset extends Model
 
     public function approvedPurchases(): HasMany
     {
-        return $this->hasMany(Purchase::class)->latest()->where('status', PurchaseStatus::Approved);
+        return $this->hasMany(Purchase::class)->latest()->where('status', PurchaseStatus::Completed);
     }
 
     public function approvedMaintenances(): HasMany
     {
-        return $this->maintenances()->where('status', MaintenanceStatus::Approved)->latest();
+        return $this->maintenances()->where('status', MaintenanceStatus::Completed)->latest();
     }
 
     public function maintenances(): HasMany

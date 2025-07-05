@@ -68,18 +68,18 @@ class Maintenance extends Model
 
     public function scopeApprovedAllTime(Builder $builder): Builder
     {
-        return $builder->where('status', MaintenanceStatus::Approved);
+        return $builder->where('status', MaintenanceStatus::Completed);
     }
 
     public function scopeApprovedThisMonth(Builder $builder): Builder
     {
-        return $builder->where('status', MaintenanceStatus::Approved)
+        return $builder->where('status', MaintenanceStatus::Completed)
             ->where('approval_date', '>=', now()->startOfMonth());
     }
 
     public function scopeApprovedLastMonth(Builder $builder): Builder
     {
-        return $builder->where('status', MaintenanceStatus::Approved)
+        return $builder->where('status', MaintenanceStatus::Completed)
             ->where('approval_date', '>=', now()->startOfMonth()->subMonth())
             ->where('approval_date', '<', now()->subMonth()->endOfMonth());
     }

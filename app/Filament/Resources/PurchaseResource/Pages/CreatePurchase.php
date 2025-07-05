@@ -13,6 +13,31 @@ class CreatePurchase extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
+    
+        $asset = \App\Models\Asset::create([
+            'name' => $data['asset_name'],
+            'brand_id' => $data['brand_id'],
+            'category_id' => $data['category_id'],
+            'room_id' => $data['room_id'] ?? NULL,
+            'quantity' => 0,
+            'price' => $data['price'],
+            // 'penyusutan_id' => $data['penyusutan_id'],
+            'condition' => 'new',
+            'date' => $data['submission_date'],
+            'user_id' => $data['user_id'] ?? NULL,
+            'number' => \App\Models\Asset::number(),
+        ]);
+        $data['asset_id'] = $asset->id;
+        $data['total'] = ((float) $data['price']) * ((float) ($data['quantity'] ?? 1));
+
+        unset(
+            $data['asset_name'],
+            $data['brand_id'],
+            $data['category_id'],
+            $data['room_id'],
+            $data['penyusutan_id'],
+        );
+
         $data['user_id'] = auth()->id();
         if (auth()->user()->isAdmin()) {
             $data['status'] = PurchaseStatus::Approved;

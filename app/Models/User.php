@@ -45,6 +45,11 @@ class User extends Authenticatable
         return $this->role === UserRole::User;
     }
 
+    public function isEmployee()
+    {
+        return $this->role === UserRole::Employee;
+    }
+
     /**
      * Get the attributes that should be cast.
      *

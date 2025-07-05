@@ -5,6 +5,7 @@ namespace App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource;
 use Filament\Actions;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
@@ -25,13 +26,22 @@ class EditUser extends EditRecord
                 ->placeholder(__('user.placeholder.username'))
                 ->required()
                 ->unique(ignoreRecord: true),
+            Forms\Components\Select::make('role')
+            ->label(__('user.column.role'))
+            ->required()
+            ->options([
+                'employee' => 'Employee',
+                'admin' => 'Director',
+                'user' => 'Admin',
+            ])
+            ->placeholder(__('user.placeholder.role')),
             TextInput::make('password')
-                ->label(__('user.placeholder.password'))
-                ->placeholder(__('user.placeholder.password'))
-                ->password()
-                ->autocomplete('new-password')
-                ->confirmed()
-                ->nullable(),
+            ->label(__('user.placeholder.password'))
+            ->placeholder(__('user.placeholder.password'))
+            ->password()
+            ->autocomplete('new-password')
+            ->confirmed()
+            ->nullable(),
             TextInput::make('password_confirmation')
                 ->label(__('user.placeholder.confirm_password'))
                 ->placeholder(__('user.placeholder.confirm_password'))

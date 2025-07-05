@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'title' => 'Pembelian',
+    'title' => 'Pengajuan Aset',
     'column' => [
         'submission_date' => 'Tanggal Pengajuan',
         'price' => 'Harga',

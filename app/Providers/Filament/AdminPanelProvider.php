@@ -31,6 +31,10 @@ class AdminPanelProvider extends PanelProvider
     {
         return $panel
             ->default()
+            ->brandName('Gothru Asset Systems')
+            ->brandLogo(url('logo.png'))
+            ->brandLogoHeight('3rem')
+            ->darkModeBrandLogo(url('logo.png'))
             ->id('admin')
             ->spa()
             ->profile(EditProfile::class)
@@ -47,7 +51,7 @@ class AdminPanelProvider extends PanelProvider
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
                 Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
+                // Widgets\FilamentInfoWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
@@ -62,13 +66,13 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
-            ])
-            ->resources([
-                config('filament-logger.activity_resource')
-            ])
-            ->plugins([
-                FilamentSettingsHubPlugin::make()
-            ])
-            ->databaseNotifications();
+            ]);
+            // ->resources([
+            //     config('filament-logger.activity_resource')
+            // ]);
+            // ->plugins([
+            //     FilamentSettingsHubPlugin::make()
+            // ])
+            // ->databaseNotifications();
     }
 }

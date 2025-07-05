@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\CategoryResource\Pages;
 use App\Filament\Resources\CategoryResource\RelationManagers;
 use App\Models\Category;
+use App\Models\Penyusutan;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -21,7 +22,10 @@ class CategoryResource extends Resource
     {
         return __('navigation_group.data');
     }
-
+    public static function canViewAny(): bool
+    {
+        return auth()->user()->isUser();
+    }
     public static function getModelLabel(): string
     {
         return __('category.title');
@@ -36,6 +40,16 @@ class CategoryResource extends Resource
                     ->placeholder(__('category.placeholder.name'))
                     ->required()
                     ->maxLength(255),
+                Forms\Components\Select::make('penyusutan_id')
+                    ->label(__('Decrease'))
+                    ->required()
+                    ->searchable()
+                    ->options(
+                        Penyusutan::all()->mapWithKeys(function ($item) {
+                            return [$item->id => $item->nama_kelompok . ' - ' . $item->kelompok  . ' ('.$item->masa_manfaat.' Tahun)'];
+                        })
+                    )
+                    ->placeholder(__('Select Decrease')),
                 Forms\Components\Textarea::make('description')
                     ->label(__('category.column.description'))
                     ->placeholder(__('category.placeholder.description'))
@@ -53,6 +67,21 @@ class CategoryResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('description')
                     ->label('Description')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('penyusutan')
+                    ->label(__('Decrease'))
+                    ->formatStateUsing(function ($record) {
+                       
+                        $garislurus = $record['penyusutan']['garis_lurus'];
+                        $saldomenurun = $record['penyusutan']['saldo_menurun'];
+                        $masa = $record['penyusutan']['masa_manfaat'];
+                        
+
+                        return $record['penyusutan']['nama_kelompok']. ' ('. $masa .' Tahun) <br> - '.$record['penyusutan']['kelompok'].', Garis Lurus ('. $garislurus .'%) <br> - '.$record['penyusutan']['kelompok'].', Saldo Menurun ('. $saldomenurun .'%)' 
+                        ;
+                    }) 
+                    ->html()
                     ->searchable()
                     ->sortable(),
             ])

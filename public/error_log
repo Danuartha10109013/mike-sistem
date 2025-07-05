@@ -1,0 +1,1 @@
+[30-Jun-2025 23:43:58 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 48250880 bytes) in /home/cmedtoth/cmedtotheworld.online/asetsistem/storage/framework/views/74dbeb2d340214d242ec60218d904007.php on line 3

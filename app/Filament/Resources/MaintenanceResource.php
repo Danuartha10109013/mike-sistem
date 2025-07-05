@@ -28,6 +28,8 @@ use Filament\Tables;
 use Filament\Tables\Actions\ExportAction;
 use Filament\Tables\Table;
 use PDF;
+use Filament\Tables\Actions\Action;
+use Maatwebsite\Excel\Facades\Excel;
 
 class MaintenanceResource extends Resource
 {
@@ -54,15 +56,24 @@ class MaintenanceResource extends Resource
 
         return null;
     }
+    public static function canCreate(): bool
+    {
+        return false;
+    }
 
     public static function form(Form $form): Form
     {
+
         return $form
             ->schema([
                 Select::make('asset_id')
                     ->label(__('asset.title'))
                     ->required()
-                    ->options(fn() => Asset::pluck('name', 'id')->toArray())
+                    ->options(fn() => Asset::whereNotIn('condition', ['used','new'])
+                            ->get()
+                            ->mapWithKeys(fn($asset) => [
+                                $asset->id => "{$asset->number} - {$asset->name}"
+                            ])->toArray())
                     ->searchable()
                     ->placeholder(__('maintenance.placeholder.asset')),
                 DatePicker::make('submission_date')
@@ -71,20 +82,31 @@ class MaintenanceResource extends Resource
                     ->placeholder(__('maintenance.placeholder.submission_date'))
                     ->default(now()),
                 TextInput::make('price')
-                    ->label(__('maintenance.column.price'))
-                    ->required()
-                    ->type('number')
-                    ->placeholder(__('maintenance.placeholder.price')),
+                ->label(__('maintenance.column.price'))
+                ->required()
+                ->numeric()
+                ->placeholder(__('maintenance.placeholder.price'))
+                ->reactive(), // Tambahkan reactive
+
                 TextInput::make('quantity')
                     ->label(__('maintenance.column.quantity'))
                     ->required()
-                    ->type('number')
-                    ->placeholder(__('maintenance.placeholder.quantity')),
+                    ->numeric()
+                    ->placeholder(__('maintenance.placeholder.quantity'))
+                    ->reactive() // Tambahkan reactive
+                    ->afterStateUpdated(function ($state, callable $set, callable $get) {
+                        $price = $get('price') ?? 0;
+                        $set('total', (float) $state * (float) $price);
+                    }),
+
                 TextInput::make('total')
                     ->label(__('maintenance.column.total'))
                     ->required()
-                    ->type('number')
-                    ->placeholder(__('maintenance.placeholder.total')),
+                    ->numeric()
+                    ->placeholder(__('maintenance.placeholder.total'))
+                    ->disabled() // Agar tidak bisa diubah manual
+                    ->dehydrated(), // Tetap menyimpan ke database meski disabled
+
                 Textarea::make('notes')
                     ->label(__('maintenance.column.notes'))
                     ->nullable()
@@ -116,16 +138,19 @@ class MaintenanceResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('price')
                     ->label(__('maintenance.column.price'))
+                    ->formatStateUsing(function ($record) {
+                        return 'Rp ' . number_format($record->price, 0, ',', '.');
+                    })
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('quantity')
-                    ->label(__('maintenance.column.quantity'))
-                    ->searchable()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('total')
-                    ->label(__('maintenance.column.total'))
-                    ->searchable()
-                    ->sortable(),
+                // Tables\Columns\TextColumn::make('quantity')
+                //     ->label(__('maintenance.column.quantity'))
+                //     ->searchable()
+                //     ->sortable(),
+                // Tables\Columns\TextColumn::make('total')
+                //     ->label(__('maintenance.column.total'))
+                //     ->searchable()
+                //     ->sortable(),
                 Tables\Columns\TextColumn::make('user.name')
                     ->label(__('user.title'))
                     ->searchable()
@@ -150,41 +175,55 @@ class MaintenanceResource extends Resource
                     ->placeholder('Show all'),
             ], layout: Tables\Enums\FiltersLayout::AboveContent)
             ->actions([
+          
+                Tables\Actions\Action::make('Approve')
+                    ->requiresConfirmation()
+                    ->action(function (Maintenance $maintenance) {
+                        $maintenance->approved();
+                        Notification::make()->success()->title('Maintenance approved')->icon('heroicon-o-check-circle')->send();
+                    })
+                    ->icon('heroicon-o-check-circle')
+                    ->hidden(fn(Maintenance $maintenance) => !$maintenance->isPending() || !auth()->user()->isAdmin()),
+                Tables\Actions\Action::make('Reject')
+                    ->requiresConfirmation()
+                    ->form([
+                        Textarea::make('notes_rejected')
+                            ->label('Rejection Reason')
+                            ->required()
+                            ->maxLength(255),
+                    ])
+                    ->action(function (Maintenance $maintenance, array $data) {
+                        $maintenance->status = MaintenanceStatus::Rejected;
+                        $maintenance->rejected_by = auth()->id();
+                        $maintenance->rejection_date = now();
+                        $maintenance->notes_rejected = $data['notes_rejected'];
+                        $maintenance->save();
+                        Notification::make()->success()->title('Maintenance rejected')->icon('heroicon-o-x-circle')->send();
+                    })
+                    ->icon('heroicon-o-x-circle')
+                    ->hidden(fn(Maintenance $maintenance) => !$maintenance->isPending() || !auth()->user()->isAdmin()),
+                Tables\Actions\Action::make('Complete')
+                    ->requiresConfirmation()
+                    ->action(function (Maintenance $maintenance) {
+                        $maintenance->status = MaintenanceStatus::Completed;
+                        $maintenance->completed_by = auth()->id();
+                        $maintenance->completion_date = now();
+                        $maintenance->save();
+
+                        if ($maintenance->asset ) {
+                            $maintenance->asset->condition = 'used';
+                            $maintenance->asset->save();
+                        }
+
+                        Notification::make()->success()->title('Maintenance completed')->icon('heroicon-o-check-circle')->send();
+                    })
+                    ->icon('heroicon-o-check-circle')
+                    ->hidden(fn(Maintenance $maintenance) => !$maintenance->isApproved() || !auth()->user()->isAdmin()),
                 Tables\Actions\ActionGroup::make([
                     Tables\Actions\ViewAction::make(),
                     // Edit only for creators except for admins
-                    Tables\Actions\EditAction::make()->hidden(fn(Maintenance $maintenance) => $maintenance->user_id !== auth()->id() && !auth()->user()->isAdmin()),
-                    Tables\Actions\Action::make('Approve')
-                        ->requiresConfirmation()
-                        ->action(function (Maintenance $maintenance) {
-                            $maintenance->approved();
-                            Notification::make()->success()->title('Maintenance approved')->icon('heroicon-o-check-circle')->send();
-                        })
-                        ->icon('heroicon-o-check-circle')
-                        ->hidden(fn(Maintenance $maintenance) => !$maintenance->isPending() || !auth()->user()->isAdmin()),
-                    Tables\Actions\Action::make('Reject')
-                        ->requiresConfirmation()
-                        ->action(function (Maintenance $maintenance) {
-                            $maintenance->status = MaintenanceStatus::Rejected;
-                            $maintenance->rejected_by = auth()->id();
-                            $maintenance->rejection_date = now();
-                            $maintenance->save();
-                            Notification::make()->success()->title('Maintenance rejected')->icon('heroicon-o-x-circle')->send();
-                        })
-                        ->icon('heroicon-o-x-circle')
-                        ->hidden(fn(Maintenance $maintenance) => !$maintenance->isPending() || !auth()->user()->isAdmin()),
-                    Tables\Actions\Action::make('Complete')
-                        ->requiresConfirmation()
-                        ->action(function (Maintenance $maintenance) {
-                            $maintenance->status = MaintenanceStatus::Completed;
-                            $maintenance->completed_by = auth()->id();
-                            $maintenance->completion_date = now();
-                            $maintenance->save();
-                            Notification::make()->success()->title('Maintenance completed')->icon('heroicon-o-check-circle')->send();
-                        })
-                        ->icon('heroicon-o-check-circle')
-                        ->hidden(fn(Maintenance $maintenance) => !$maintenance->isApproved() || !auth()->user()->isAdmin()),
-
+                    Tables\Actions\EditAction::make()->hidden(fn(Maintenance $maintenance) =>  auth()->user()->isEmployee()),
+                    
                 ]),
             ])
             ->bulkActions([
@@ -202,14 +241,19 @@ class MaintenanceResource extends Resource
 //                    ->deselectRecordsAfterCompletion()
 
             ])
+            // ->headerActions([
+            //     ExportAction::make()
+            //         ->exporter(MaintenanceExporter::class)
+            //         ->formats([
+            //             ExportFormat::Xlsx
+            //         ])
+            //         ->fileDisk('public')
+            //         ->fileName('maintenance_report.xlsx')
+            // ])
             ->headerActions([
-                ExportAction::make()
-                    ->exporter(MaintenanceExporter::class)
-                    ->formats([
-                        ExportFormat::Xlsx
-                    ])
-                    ->fileDisk('public')
-                    ->fileName('maintenance_report.xlsx')
+                Action::make('download')
+                    ->label('Download Excel')
+                    ->action(fn () => Excel::download(new MaintenanceExporter, 'maintenance_report.xlsx')),
             ])
             ->emptyStateActions([
                 Tables\Actions\CreateAction::make(),
@@ -228,11 +272,14 @@ class MaintenanceResource extends Resource
                             TextEntry::make('submission_date')
                                 ->label(__('maintenance.column.submission_date')),
                             TextEntry::make('price')
-                                ->label(__('maintenance.column.price')),
-                            TextEntry::make('quantity')
-                                ->label(__('maintenance.column.quantity')),
-                            TextEntry::make('total')
-                                ->label(__('maintenance.column.total')),
+                                ->label(__('maintenance.column.price'))
+                                ->formatStateUsing(function ($record) {
+                                    return 'Rp ' . number_format($record->price, 0, ',', '.');
+                                }),
+                            // TextEntry::make('quantity')
+                            //     ->label(__('maintenance.column.quantity')),
+                            // TextEntry::make('total')
+                            //     ->label(__('maintenance.column.total')),
                         ])
                     ]),
                     Grid::make()->schema([
@@ -244,6 +291,9 @@ class MaintenanceResource extends Resource
                                 ->badge(),
                             TextEntry::make('notes')
                                 ->label(__('maintenance.column.notes')),
+                            TextEntry::make('notes_rejected')
+                                ->label(__('Notes Rejected'))
+                                ->hidden(fn(Maintenance $maintenance) => !$maintenance->isRejected()),
                             TextEntry::make('approvedBy.name')
                                 ->label(__('maintenance.column.approved_by'))
                                 ->hidden(fn(Maintenance $maintenance) => !$maintenance->isApproved()),
